@@ -24,6 +24,7 @@
     "packages/*"
   ],
   "dependencies": {
+    "tailwind-merge": "^3.3.0",
     "tw-animate-css": "^1.3.2"
   }
 }
