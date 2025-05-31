@@ -14,6 +14,13 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2022"
+    "target": "ES2022",
+    "paths": {
+      "@meetzen/database/*": ["../../packages/database/*"],
+      "@meetzen/ui/*": ["../../packages/ui/*"],
+      "@meetzen/api/*": ["../../packages/api/*"],
+      "@meetzen/auth/*": ["../../packages/auth/*"],
+      "@meetzen/typescript-config/*": ["../../packages/typescript-config/*"]
+    }
   }
 }

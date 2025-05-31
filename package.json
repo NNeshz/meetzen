@@ -2,11 +2,13 @@
   "name": "meetzen",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "build": "turbo build",
+    "envs": "turbo envs",
+    "dev": "turbo dev",
+    "lint": "oxlint",
+    "check-types": "turbo check-types",
+    "shadcn": "bun --filter @meetzen/ui shadcn",
+    "prisma": "bun --filter @meetzen/database prisma-command"
   },
   "devDependencies": {
     "prettier": "^3.5.3",

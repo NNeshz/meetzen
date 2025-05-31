@@ -1,5 +1,5 @@
 {
-  "extends": "@meetzen/typescript-config/react-library.json",
+  "extends": "@meetzen/typescript-config/base.json",
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
 
@@ -102,9 +102,12 @@
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
-    "jsx": "preserve",
+    "baseUrl": ".",
     "paths": {
-      "@meetzen/ui/*": ["./*"]
+      "@meetzen/api/*": ["../../packages/api/*"],
+      "@meetzen/database/*": ["../../packages/database/*"],
+      "@meetzen/auth/*": ["../../packages/auth/*"],
+      "@meetzen/s3/*": ["../../packages/s3/*"]
     }
   }
 }
