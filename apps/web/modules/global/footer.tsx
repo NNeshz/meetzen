@@ -1,12 +1,5 @@
-'use client'
-
 import Link from "next/link";
-import { useState } from "react";
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-} from "@meetzen/ui/src/components/tabs";
+
 import { 
   Mail, 
   Instagram, 
@@ -14,10 +7,8 @@ import {
   Twitter, 
   Linkedin,
   Heart,
-  Sun,
-  Moon,
-  Monitor
 } from "lucide-react";
+import { ThemeSwitcher } from "@meetzen/ui/src/providers/theme-switcher";
 
 const productLinks = [
   {
@@ -83,14 +74,6 @@ const socialLinks = [
 ];
 
 export function Footer() {
-  const [currentTheme, setCurrentTheme] = useState("system");
-
-  const handleThemeChange = (theme: string) => {
-    setCurrentTheme(theme);
-    // Aquí iría la lógica real de cambio de tema
-    console.log(`Tema cambiado a: ${theme}`);
-  };
-
   return (
     <footer className="mt-24">
       <div className="max-w-7xl mx-auto px-4 py-16">
@@ -200,35 +183,7 @@ export function Footer() {
                 Personaliza tu experiencia visual
               </p>
               
-              <Tabs 
-                value={currentTheme} 
-                onValueChange={handleThemeChange}
-                className="w-full"
-              >
-                <TabsList className="grid w-full grid-cols-3 bg-muted/50">
-                  <TabsTrigger 
-                    value="system" 
-                    className="flex items-center gap-2 text-xs"
-                  >
-                    <Monitor className="w-4 h-4" />
-                    Sistema
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="light"
-                    className="flex items-center gap-2 text-xs"
-                  >
-                    <Sun className="w-4 h-4" />
-                    Claro
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="dark"
-                    className="flex items-center gap-2 text-xs"
-                  >
-                    <Moon className="w-4 h-4" />
-                    Oscuro
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
+              <ThemeSwitcher />
             </div>
           </div>
         </div>
