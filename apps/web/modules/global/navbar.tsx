@@ -27,12 +27,12 @@ export function Navbar() {
   return (
     <>
       <header className="fixed top-4 z-50 w-full flex justify-center px-4">
-        <nav className="w-full max-w-7xl px-4 md:px-8 flex items-center justify-between bg-background backdrop-blur-md rounded-xl shadow-md py-3">
+        <nav className="w-full max-w-7xl p-4 flex items-center shadow-lg justify-between bg-background backdrop-blur-md rounded-lg">
           {/* Logo */}
-          <div className="text-xl font-bold">meetzen</div>
+          <div className="text-xl font-medium tracking-tighter">meetzen.</div>
 
           {/* Desktop Links */}
-          <ul className="hidden md:flex gap-8 text-gray-700 font-medium">
+          <ul className="hidden md:flex gap-8 text-muted-foreground font-medium tracking-tighter">
             {links.map((link) => (
               <li key={link.name}>
                 <Link href={link.href} className="hover:text-foreground transition">{link.name}</Link>
@@ -95,7 +95,7 @@ export function Navbar() {
           >
             {/* Top bar */}
             <div className="flex justify-between items-center">
-              <div className="text-xl font-bold">meetzen</div>
+              <div className="text-xl font-bold">meetzen.</div>
               <Button
                 variant="ghost"
                 size="icon"

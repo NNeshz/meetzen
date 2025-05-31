@@ -1,4 +1,5 @@
 import { Navbar } from "@/modules/global/navbar";
+import { Footer } from "@/modules/global/footer";
 
 export default function PublicLayout({
   children,
@@ -9,6 +10,7 @@ export default function PublicLayout({
     <>
       <Navbar />
       {children}
+      <Footer />
     </>
   );
 }
