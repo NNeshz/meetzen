@@ -20,7 +20,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["../../apps/web/*"],
       "@meetzen/ui/*": ["../../packages/ui/*"],
       "@meetzen/api/*": ["../../packages/api/*"],
       "@meetzen/auth/*": ["../../packages/auth/*"]
