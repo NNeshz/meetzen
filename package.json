@@ -24,6 +24,7 @@
     "packages/*"
   ],
   "dependencies": {
+    "framer-motion": "^12.15.0",
     "tailwind-merge": "^3.3.0",
     "tw-animate-css": "^1.3.2"
   }
