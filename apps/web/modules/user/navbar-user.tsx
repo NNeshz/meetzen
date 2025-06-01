@@ -11,21 +11,14 @@ import { cn } from "@meetzen/ui/src/lib/utils"
 
 const links = [
   {
-    name: "Citas Pasadas",
+    name: "Metricas",
     href: "/user",
   },
   {
-    name: "Negocio",
-    href: "/user/negocio",
-  },
-  {
-    name: "Empleados",
-    href: "/user/empleados",
-  },
-  {
-    name: "Configuración",
-    href: "/user/configuracion",
+    name: "Citas",
+    href: "/user/citas",
   }
+
 ]
 
 export function NavbarUser() {

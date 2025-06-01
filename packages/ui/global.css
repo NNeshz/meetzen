@@ -160,3 +160,12 @@ html {
 body::-webkit-scrollbar {
   width: 0px;
 }
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
