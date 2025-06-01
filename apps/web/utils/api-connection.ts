@@ -1,4 +1,3 @@
-import type { Api } from "@meetzen/api/src/index";
-import { treaty } from "@elysiajs/eden";
+import { createApiClient } from "@meetzen/api/src/eden";
 
-export const apiClient = treaty<Api>(process.env.NEXT_PUBLIC_BACKEND_URL).api;
+export const apiClient = createApiClient(process.env.NEXT_PUBLIC_BACKEND_URL);
