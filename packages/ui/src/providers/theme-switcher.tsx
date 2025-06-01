@@ -10,10 +10,10 @@ export function ThemeSwitcher() {
 
   return (
     <Tabs className="w-full" defaultValue="system">
-      <TabsList className="grid w-full grid-cols-3 bg-muted/50">
+      <TabsList className="grid w-full grid-cols-3 bg-muted/50 p-1">
         <TabsTrigger
           value="system"
-          className="flex items-center gap-2 text-xs"
+          className="flex items-center gap-2 text-xs px-1"
           onClick={() => setTheme("system")}
         >
           <Monitor className="w-4 h-4" />
@@ -21,7 +21,7 @@ export function ThemeSwitcher() {
         </TabsTrigger>
         <TabsTrigger
           value="light"
-          className="flex items-center gap-2 text-xs"
+          className="flex items-center gap-2 text-xs px-1"
           onClick={() => setTheme("light")}
         >
           <Sun className="w-4 h-4" />
@@ -29,7 +29,7 @@ export function ThemeSwitcher() {
         </TabsTrigger>
         <TabsTrigger
           value="dark"
-          className="flex items-center gap-2 text-xs"
+          className="flex items-center gap-2 text-xs px-1"
           onClick={() => setTheme("dark")}
         >
           <Moon className="w-4 h-4" />

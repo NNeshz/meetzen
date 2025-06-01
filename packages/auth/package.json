@@ -1,0 +1,17 @@
+{
+  "name": "@meetzen/auth",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "generate": "bunx --env-file=../../.env.local @better-auth/cli@latest generate --output ./../../packages/database/prisma/schema/schema.prisma -y"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "5.5.4"
+  },
+  "dependencies": {
+    "better-auth": "^1.2.7"
+  }
+}
