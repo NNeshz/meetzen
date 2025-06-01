@@ -3,7 +3,8 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "prisma-command": "bun --env-file=../../.env.local --stdio prisma"
+    "prisma-command": "bun --env-file=../../.env.local --stdio prisma",
+    "clean-workspace": "rm -rf node_modules"
   },
   "devDependencies": {
     "@types/bun": "latest"

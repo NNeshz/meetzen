@@ -5,10 +5,12 @@
     "build": "turbo build",
     "envs": "turbo envs",
     "dev": "turbo dev",
+    "postinstall": "bun prisma generate",
     "lint": "oxlint",
     "check-types": "turbo check-types",
     "shadcn": "bun --filter @meetzen/ui shadcn",
-    "prisma": "bun --filter @meetzen/database prisma-command"
+    "prisma": "bun --filter @meetzen/database prisma-command",
+    "clean-workspace": "rm -rf node_modules && turbo clean-workspace"
   },
   "devDependencies": {
     "prettier": "^3.5.3",

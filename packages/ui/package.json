@@ -10,7 +10,9 @@
     "lint": "eslint . --max-warnings 0",
     "generate:component": "turbo gen react-component",
     "check-types": "tsc --noEmit",
-    "shadcn": "bunx --bun --stdio shadcn@latest"
+    "shadcn": "bunx --bun --stdio shadcn@latest",
+    "clean-workspace": "rm -rf node_modules"
+
   },
   "devDependencies": {
     "@meetzen/typescript-config": "*",
