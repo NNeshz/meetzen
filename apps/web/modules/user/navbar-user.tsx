@@ -11,20 +11,24 @@ import { cn } from "@meetzen/ui/src/lib/utils"
 
 const links = [
   {
-    name: "Features",
-    href: "/features",
+    name: "Citas Pasadas",
+    href: "/user",
   },
   {
-    name: "Demo",
-    href: "/demo",
+    name: "Negocio",
+    href: "/user/negocio",
   },
   {
-    name: "Contacto",
-    href: "/contacto",
+    name: "Empleados",
+    href: "/user/empleados",
+  },
+  {
+    name: "Configuración",
+    href: "/user/configuracion",
   }
 ]
 
-export function Navbar() {
+export function NavbarUser() {
   const [menuOpen, setMenuOpen] = useState(false)
   const { data: session } = authClient.useSession()
 
@@ -47,9 +51,9 @@ export function Navbar() {
           {/* Sign in button */}
           <div className="hidden md:block">
             {session ? (
-              <Link href="/user" className={cn(buttonVariants({ variant: "default" }))}>
+              <Button variant="default">
                 {session.user.name}
-              </Link>
+              </Button>
             ) : (
               <Link href="/auth" className={cn(buttonVariants({ variant: "default" }))}>Iniciar sesión</Link>
             )}
@@ -142,9 +146,9 @@ export function Navbar() {
             <div className="flex gap-4 mt-10">
               {
                 session ? (
-                  <Link href="/user" className={cn(buttonVariants({ variant: "default" }))}>
+                  <Button variant="default" className="w-full">
                     {session.user.name}
-                  </Link>
+                  </Button>
                 ) : (
                   <Link href="/auth" className={cn(buttonVariants({ variant: "default" }))}>Iniciar sesión</Link>
                 )
