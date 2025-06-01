@@ -10,6 +10,11 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum Role {
+  COMPANY
+  USER
+}
+
 model User {
   id String @id
 
@@ -32,7 +37,7 @@ model User {
   emailVerified       Boolean
   phoneNumberVerified Boolean?
   isAnonymous         Boolean?
-  role                String?
+  role                Role
   banned              Boolean?
   banReason           String?
   banExpires          DateTime?

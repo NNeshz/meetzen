@@ -4,7 +4,7 @@ import { authClientVanilla } from "@meetzen/auth/client/vanilla";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const session = await authClientVanilla.getSession({
+  const { data } = await authClientVanilla.getSession({
       fetchOptions: {
           headers: await headers(),
           next: {
@@ -13,9 +13,25 @@ export async function middleware(request: NextRequest) {
       }
   })
 
+  if (!data && pathname === "/auth") {
+    return NextResponse.redirect(new URL("/auth", request.url));
+  }
+
+  if(data && pathname === "/auth") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  if(data && data.user.role === "USER" && pathname.startsWith("/company")) {
+    return NextResponse.redirect(new URL("/user", request.url));
+  }
+
+  if(data && data.user.role === "COMPANY" && pathname.startsWith("/user")) {
+    return NextResponse.redirect(new URL("/company", request.url));
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/company", "/user"],
+  matcher: ["/company", "/user", "/auth"],
 };
