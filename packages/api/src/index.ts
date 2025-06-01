@@ -2,6 +2,8 @@ import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
 import "./utils/envs";
 
+import { betterAuthPlugin } from "@meetzen/api/src/utils/better-auth-plugin";
+
 export const api = new Elysia({
   prefix: "/api",
 })
@@ -11,5 +13,6 @@ export const api = new Elysia({
   credentials: true,
   allowedHeaders: ["Authorization", "Content-Type"],
 }))
+.use(betterAuthPlugin)
   
 export type Api = typeof api;

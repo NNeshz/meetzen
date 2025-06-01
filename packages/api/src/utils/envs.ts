@@ -9,6 +9,8 @@ const envSchema = t.Object({
   DATABASE_URL: t.String(),
   NEXT_PUBLIC_BACKEND_URL: t.String(),
   NEXT_PUBLIC_FRONTEND_URL: t.String(),
+  GOOGLE_CLIENT_ID: t.String(),
+  GOOGLE_CLIENT_SECRET: t.String(),
 });
 
 type EnvSchema = typeof envSchema.static;

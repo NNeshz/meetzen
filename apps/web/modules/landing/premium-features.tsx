@@ -23,7 +23,7 @@ export function PremiumFeatures() {
     return (
         <div className="p-4 max-w-8xl mx-auto flex items-center justify-center md:mt-24 bg-background min-h-screen">
             <div className="flex flex-col items-left justify-center text-left max-w-7xl">
-                <h2 className="text-3xl md:text-6xl font-bold text-white mb-4 tracking-tighter">
+                <h2 className="text-3xl md:text-6xl font-bold mb-4 tracking-tighter">
                     Construido y pensado para ti.
                 </h2>
                 <p className="text-muted-foreground max-w-3xl mt-4 text-lg tracking-tighter">

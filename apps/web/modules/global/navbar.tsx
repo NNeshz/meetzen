@@ -1,10 +1,13 @@
 'use client'
 
 import { useState } from "react"
+import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X } from "lucide-react"
+
 import { Button } from "@meetzen/ui/src/components/button"
-import Link from "next/link"
+import { signInWithGoogle } from "@/utils/auth-connection"
+import { authClient } from "@meetzen/auth/client"
 
 const links = [
   {
@@ -23,6 +26,7 @@ const links = [
 
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const { data: session } = authClient.useSession()
 
   return (
     <>
@@ -42,7 +46,13 @@ export function Navbar() {
 
           {/* Sign in button */}
           <div className="hidden md:block">
-            <Button variant="default">Iniciar sesión</Button>
+            {session ? (
+              <Button variant="default">
+                {session.user.name}
+              </Button>
+            ) : (
+              <Button variant="default" onClick={() => signInWithGoogle()}>Iniciar sesión</Button>
+            )}
           </div>
 
           {/* Mobile Menu Button with Icon Animation */}
@@ -130,9 +140,15 @@ export function Navbar() {
 
             {/* Bottom buttons */}
             <div className="flex gap-4 mt-10">
-              <Button className="w-full">
-                Iniciar sesión
-              </Button>
+              {
+                session ? (
+                  <Button variant="default">
+                    {session.user.name}
+                  </Button>
+                ) : (
+                  <Button variant="default" onClick={() => signInWithGoogle()}>Iniciar sesión</Button>
+                )
+              }
             </div>
           </motion.div>
         )}
