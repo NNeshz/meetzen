@@ -28,7 +28,6 @@ export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const { data: session } = authClient.useSession()
 
-  console.log(session)
   const role = session?.user.role
 
   return (

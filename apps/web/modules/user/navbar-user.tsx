@@ -17,6 +17,10 @@ const links = [
   {
     name: "Citas",
     href: "/user/citas",
+  },
+  {
+    name: "Convertirte en empresa",
+    href: "/user/pricing",
   }
 
 ]

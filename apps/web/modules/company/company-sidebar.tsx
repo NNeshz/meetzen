@@ -40,7 +40,7 @@ const data = {
     },
     {
       title: "Citas antiguas",
-      url: "/company/citas-pasadas",
+      url: "/company/pasadas",
       icon: Clock,
     },
     {
