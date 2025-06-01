@@ -6,28 +6,36 @@ import { openAPI } from "better-auth/plugins";
 const prisma = new PrismaClient();
 
 export const auth = betterAuth({
-    appName: "Meetzen",
-    database: prismaAdapter(prisma, {
-        provider: "postgresql",
-    }),
-    secret: process.env.AUTH_SECRET,
-    baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
-    trustedOrigins: [
-        process.env.NEXT_PUBLIC_FRONTEND_URL as string,
-        process.env.NEXT_PUBLIC_BACKEND_URL as string,
-    ],
-    socialProviders: {
-        google: {
-            clientId: process.env.GOOGLE_CLIENT_ID as string,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-        }
+  appName: "Meetzen",
+  database: prismaAdapter(prisma, {
+    provider: "postgresql",
+  }),
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        required: true,
+        input: false,
+        defaultValue: "USER",
+      },
     },
-    advanced: {
-        crossSubDomainCookies: {
-            enabled: true,
-        }
+  },
+  secret: process.env.AUTH_SECRET,
+  baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+  trustedOrigins: [
+    process.env.NEXT_PUBLIC_FRONTEND_URL as string,
+    process.env.NEXT_PUBLIC_BACKEND_URL as string,
+  ],
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
-    plugins: [
-        openAPI()
-    ]
-})
+  },
+  advanced: {
+    crossSubDomainCookies: {
+      enabled: true,
+    },
+  },
+  plugins: [openAPI()],
+});

@@ -28,6 +28,9 @@ export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const { data: session } = authClient.useSession()
 
+  console.log(session)
+  const role = session?.user.role
+
   return (
     <>
       <header className="fixed top-4 z-50 w-full flex justify-center px-4">
@@ -47,7 +50,7 @@ export function Navbar() {
           {/* Sign in button */}
           <div className="hidden md:block">
             {session ? (
-              <Link href="/user" className={cn(buttonVariants({ variant: "default" }))}>
+              <Link href={role === "USER" ? "/user" : "/company"} className={cn(buttonVariants({ variant: "default" }))}>
                 {session.user.name}
               </Link>
             ) : (
@@ -142,11 +145,11 @@ export function Navbar() {
             <div className="flex gap-4 mt-10">
               {
                 session ? (
-                  <Link href="/user" className={cn(buttonVariants({ variant: "default" }))}>
+                  <Link href={role === "USER" ? "/user" : "/company"} className={cn(buttonVariants({ variant: "default", className: "w-full" }))}>
                     {session.user.name}
                   </Link>
                 ) : (
-                  <Link href="/auth" className={cn(buttonVariants({ variant: "default" }))}>Iniciar sesión</Link>
+                  <Link href="/auth" className={cn(buttonVariants({ variant: "default", className: "w-full" }))}>Iniciar sesión</Link>
                 )
               }
             </div>
