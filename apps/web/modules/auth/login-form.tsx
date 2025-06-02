@@ -14,14 +14,14 @@ export function LoginForm({
   return (
     <form className={cn("flex flex-col gap-6", className)} {...props}>
       <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-bold">Iniciar sesión</h1>
+        <h1 className="text-2xl font-bold">Iniciar Sesión</h1>
         <p className="text-muted-foreground text-sm text-balance">
           Aquí manejamos tanto el registro como el inicio de sesión.
         </p>
       </div>
       <div className="grid gap-6">
         <div className="grid gap-3">
-          <Label htmlFor="email">Correo electrónico</Label>
+          <Label htmlFor="email">Correo Electrónico</Label>
           <Input id="email" type="email" placeholder="m@example.com" required />
         </div>
         <div className="grid gap-3">
@@ -31,13 +31,13 @@ export function LoginForm({
               href="#"
               className="ml-auto text-sm underline-offset-4 hover:underline"
             >
-              Olvidaste tu contraseña?
+              ¿Olvidaste tu contraseña?
             </a>
           </div>
           <Input id="password" type="password" required />
         </div>
         <Button type="submit" className="w-full">
-          Iniciar sesión
+          Iniciar Sesión
         </Button>
         <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
           <span className="bg-background text-muted-foreground relative z-10 px-2">
@@ -60,7 +60,7 @@ export function LoginForm({
               fill="currentColor"
             />
           </svg>
-          Iniciar sesión con Google
+          Iniciar Sesión con Google
         </Button>
         <Button variant="outline" className="w-full">
           <svg
@@ -74,7 +74,7 @@ export function LoginForm({
               fill="currentColor"
             />
           </svg>
-          Iniciar sesión con Apple
+          Iniciar Sesión con Apple
         </Button>
       </div>
     </form>

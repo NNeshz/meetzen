@@ -1,13 +1,13 @@
-'use client'
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X } from "lucide-react"
+import { useState } from "react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X } from "lucide-react";
 
-import { Button, buttonVariants } from "@meetzen/ui/src/components/button"
-import { authClient } from "@meetzen/auth/client"
-import { cn } from "@meetzen/ui/src/lib/utils"
+import { Button, buttonVariants } from "@meetzen/ui/src/components/button";
+import { authClient } from "@meetzen/auth/client";
+import { cn } from "@meetzen/ui/src/lib/utils";
 
 const links = [
   {
@@ -21,27 +21,34 @@ const links = [
   {
     name: "Contacto",
     href: "/contacto",
-  }
-]
+  },
+];
 
 export function Navbar() {
-  const [menuOpen, setMenuOpen] = useState(false)
-  const { data: session } = authClient.useSession()
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { data: session } = authClient.useSession();
 
-  const role = session?.user.role
+  const role = session?.user.role;
 
   return (
     <>
       <header className="fixed top-4 z-50 w-full flex justify-center px-4">
         <nav className="w-full max-w-7xl p-4 flex items-center shadow-lg justify-between bg-background backdrop-blur-md rounded-lg">
           {/* Logo */}
-          <Link href="/" className="text-xl font-medium tracking-tighter">meetzen.</Link>
+          <Link href="/" className="text-xl font-medium tracking-tighter">
+            meetzen.
+          </Link>
 
           {/* Desktop Links */}
           <ul className="hidden md:flex gap-8 text-muted-foreground font-medium tracking-tighter">
             {links.map((link) => (
               <li key={link.name}>
-                <Link href={link.href} className="hover:text-foreground transition">{link.name}</Link>
+                <Link
+                  href={link.href}
+                  className="hover:text-foreground transition"
+                >
+                  {link.name}
+                </Link>
               </li>
             ))}
           </ul>
@@ -49,11 +56,19 @@ export function Navbar() {
           {/* Sign in button */}
           <div className="hidden md:block">
             {session ? (
-              <Link href={role === "USER" ? "/user" : "/company"} className={cn(buttonVariants({ variant: "default" }))}>
+              <Link
+                href={role === "USER" ? "/user" : "/company"}
+                className={cn(buttonVariants({ variant: "default" }))}
+              >
                 {session.user.name}
               </Link>
             ) : (
-              <Link href="/auth" className={cn(buttonVariants({ variant: "default" }))}>Iniciar sesión</Link>
+              <Link
+                href="/auth"
+                className={cn(buttonVariants({ variant: "default" }))}
+              >
+                Iniciar Sesión
+              </Link>
             )}
           </div>
 
@@ -142,19 +157,29 @@ export function Navbar() {
 
             {/* Bottom buttons */}
             <div className="flex gap-4 mt-10">
-              {
-                session ? (
-                  <Link href={role === "USER" ? "/user" : "/company"} className={cn(buttonVariants({ variant: "default", className: "w-full" }))}>
-                    {session.user.name}
-                  </Link>
-                ) : (
-                  <Link href="/auth" className={cn(buttonVariants({ variant: "default", className: "w-full" }))}>Iniciar sesión</Link>
-                )
-              }
+              {session ? (
+                <Link
+                  href={role === "USER" ? "/user" : "/company"}
+                  className={cn(
+                    buttonVariants({ variant: "default", className: "w-full" })
+                  )}
+                >
+                  {session.user.name}
+                </Link>
+              ) : (
+                <Link
+                  href="/auth"
+                  className={cn(
+                    buttonVariants({ variant: "default", className: "w-full" })
+                  )}
+                >
+                  Iniciar sesión
+                </Link>
+              )}
             </div>
           </motion.div>
         )}
       </AnimatePresence>
     </>
-  )
+  );
 }
