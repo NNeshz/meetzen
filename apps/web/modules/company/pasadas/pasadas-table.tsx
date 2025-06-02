@@ -60,7 +60,7 @@ const initialUsers: Appointment[] = [
     name: "Ana García",
     servicio: "Limpieza General",
     status: "completed",
-    avatar: "/placeholder.svg?height=40&width=40",
+    avatar: "",
     day: "2024-01-15",
     time: "10:00 AM",
   },
@@ -77,7 +77,7 @@ const initialUsers: Appointment[] = [
     name: "María Rodríguez",
     servicio: "Reposición de coronas",
     status: "cancelled",
-    avatar: "/placeholder.svg?height=40&width=40",
+    avatar: "",
     day: "2024-01-05",
     time: "10:00 AM",
   },
@@ -94,7 +94,7 @@ const initialUsers: Appointment[] = [
     name: "Laura Sánchez",
     servicio: "Blanqueamiento",
     status: "completed",
-    avatar: "/placeholder.svg?height=40&width=40",
+    avatar: "",
     day: "2024-01-12",
     time: "07:00 PM",
   },
@@ -148,7 +148,7 @@ export function PasadasTable() {
                     <div className="flex items-center gap-3">
                       <Avatar className="h-8 w-8">
                         <AvatarImage
-                          src={user.avatar || "/placeholder.svg"}
+                          src={user.avatar}
                           alt={user.name}
                         />
                         <AvatarFallback>
@@ -232,7 +232,7 @@ export function PasadasTable() {
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3 flex-1">
                       <Avatar className="h-10 w-10">
-                        <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.name} />
+                        <AvatarImage src={user.avatar} alt={user.name} />
                         <AvatarFallback>
                           {user.name
                             .split(" ")

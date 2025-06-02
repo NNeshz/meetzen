@@ -60,7 +60,7 @@ const initialUsers: User[] = [
     name: "Ana García",
     email: "ana.garcia@example.com",
     status: "active",
-    avatar: "/placeholder.svg?height=40&width=40",
+    avatar: "",
     createdAt: "2024-01-15",
     lastWorkedAt: "2024-01-20",
   },
@@ -77,7 +77,7 @@ const initialUsers: User[] = [
     name: "María Rodríguez",
     email: "maria.rodriguez@example.com",
     status: "inactive",
-    avatar: "/placeholder.svg?height=40&width=40",
+    avatar: "",
     createdAt: "2024-01-05",
     lastWorkedAt: "2024-01-18",
   },
@@ -93,7 +93,7 @@ const initialUsers: User[] = [
     name: "Laura Sánchez",
     email: "laura.sanchez@example.com",
     status: "active",
-    avatar: "/placeholder.svg?height=40&width=40",
+    avatar: "",
     createdAt: "2024-01-12",
     lastWorkedAt: "2024-01-21",
   },
@@ -147,7 +147,7 @@ export function EmpleadosTable() {
                     <div className="flex items-center gap-3">
                       <Avatar className="h-8 w-8">
                         <AvatarImage
-                          src={user.avatar || "/placeholder.svg"}
+                          src={user.avatar}
                           alt={user.name}
                         />
                         <AvatarFallback>
@@ -231,7 +231,7 @@ export function EmpleadosTable() {
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3 flex-1">
                       <Avatar className="h-10 w-10">
-                        <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.name} />
+                        <AvatarImage src={user.avatar} alt={user.name} />
                         <AvatarFallback>
                           {user.name
                             .split(" ")
