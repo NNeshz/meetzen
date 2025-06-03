@@ -9,11 +9,8 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@meetzen/ui/src/components/dropdown-menu";
-import {
-  IconChevronLeft,
-  IconChevronRight,
-} from "@tabler/icons-react";
-import { CalendarPlus, Filter } from "lucide-react"
+import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
+import { CalendarPlus, Filter } from "lucide-react";
 import React, { useState } from "react";
 
 import { Temporal } from "temporal-polyfill";
@@ -92,7 +89,7 @@ export function CalendarDisplay() {
   };
 
   return (
-    <div className="overflow-auto space-y-4 md:space-y-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+    <div className="space-y-4 md:space-y-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
       <div className="flex md:flex-row flex-col items-center justify-between space-y-2 md:space-y-0">
         <h4 className="text-2xl font-bold md:mb-0">
           {formatSpanishMonthYear(startDate)}
@@ -101,7 +98,11 @@ export function CalendarDisplay() {
           <Button variant="outline" onClick={() => handleNavigation("left")}>
             <IconChevronLeft />
           </Button>
-          <Button variant="outline" onClick={handleToday} className="hidden md:block">
+          <Button
+            variant="outline"
+            onClick={handleToday}
+            className="hidden md:block"
+          >
             Hoy
           </Button>
           <Button variant="outline" onClick={() => handleNavigation("right")}>
@@ -134,52 +135,63 @@ export function CalendarDisplay() {
           <div className="h-6 w-px bg-muted" />
           <Button onClick={handleToday}>
             <CalendarPlus />
-            Agregar cita</Button>
+            Agregar cita
+          </Button>
         </div>
       </div>
 
-      <div
-        className="grid rounded-xl overflow-hidden border"
-        style={{
-          gridTemplateColumns: `max-content repeat(${columnCount}, 1fr)`,
-        }}
-      >
-        {/* Columna de horas y fila de días */}
-        <div className="p-2 max-w-24 w-full bg-muted"></div>
+      {/* Contenedor de calendario con scroll vertical */}
+      <div className="rounded-xl overflow-hidden border">
+        {/* Encabezado con días */}
+        <div
+          className="grid"
+          style={{
+            gridTemplateColumns: `max-content repeat(${columnCount}, 1fr)`,
+          }}
+        >
+          <div className="bg-muted p-2 max-w-24 w-full" />
+          {dates.map((date, idx) => {
+            const today = Temporal.Now.zonedDateTimeISO();
+            const isToday =
+              date.year === today.year &&
+              date.month === today.month &&
+              date.day === today.day;
 
-        {/* Columna de días */}
-        {dates.map((date, idx) => {
-          const today = Temporal.Now.zonedDateTimeISO();
-          const isToday =
-            date.year === today.year &&
-            date.month === today.month &&
-            date.day === today.day;
-
-          return (
-            <div
-              key={idx}
-              className={`border-l p-2 text-center bg-muted font-semibold flex items-center justify-center gap-1 ${
-                isToday ? "text-indigo-500" : ""
-              }`}
-            >
-              <div>{DAYS[date.dayOfWeek % 7]}</div>
-              <div>{date.day}</div>
-            </div>
-          );
-        })}
-
-        {/* Filas de horas */}
-        {HOURS.map((hour, hourIdx) => (
-          <React.Fragment key={hourIdx}>
-            <div className="p-2 text-sm text-right max-w-24 w-full">{hour}</div>
-            {Array.from({ length: columnCount }).map((_, dayIdx) => (
+            return (
               <div
-                key={`${hourIdx}-${dayIdx}`}
-                className="border-l border-b h-24 transition-colors"
-              />
-            ))}
-          </React.Fragment>
-        ))}
+                key={idx}
+                className={`p-2 text-center bg-muted font-semibold flex items-center justify-center gap-1 ${
+                  isToday ? "text-indigo-500" : ""
+                }`}
+              >
+                <div>{DAYS[date.dayOfWeek % 7]}</div>
+                <div>{date.day}</div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Contenido con scroll */}
+        <div
+          className="grid overflow-y-scroll h-[calc(100vh-220px)] md:h-[calc(100vh-170px)] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
+          style={{
+            gridTemplateColumns: `max-content repeat(${columnCount}, 1fr)`,
+          }}
+        >
+          {HOURS.map((hour, hourIdx) => (
+            <React.Fragment key={hourIdx}>
+              <div className="p-2 text-sm text-right max-w-24 w-full border-b">
+                {hour}
+              </div>
+              {Array.from({ length: columnCount }).map((_, dayIdx) => (
+                <div
+                  key={`${hourIdx}-${dayIdx}`}
+                  className="border-l border-b h-32 transition-colors"
+                />
+              ))}
+            </React.Fragment>
+          ))}
+        </div>
       </div>
     </div>
   );
