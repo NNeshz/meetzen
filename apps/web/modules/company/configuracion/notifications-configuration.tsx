@@ -2,17 +2,17 @@ export function NotificationsConfiguration() {
     return (
         <div className="grid grid-cols-1 gap-x-8 gap-y-8 py-10 lg:grid-cols-3">
         <div className="px-4 sm:px-0">
-          <h2 className="text-base/7 font-semibold text-gray-900">Notifications</h2>
-          <p className="mt-1 text-sm/6 text-gray-600">
-            We'll always let you know about important changes, but you pick what else you want to hear about.
+          <h2 className="text-base/7 font-semibold">Redes Sociales de la Empresa</h2>
+          <p className="mt-1 text-sm/6 text-muted-foreground">
+            Aquí puedes configurar las redes sociales de tu empresa. Asegúrate de que la información sea precisa y esté actualizada.
           </p>
         </div>
 
-        <form className="bg-white shadow-xs ring-1 ring-gray-900/5 sm:rounded-xl lg:col-span-2">
+        <form className="bg-gradient-to-t from-primary/5 to-card dark:bg-card border sm:rounded-xl lg:col-span-2">
           <div className="px-4 py-6 sm:p-8">
             <div className="max-w-2xl space-y-10 md:col-span-2">
               <fieldset>
-                <legend className="text-sm/6 font-semibold text-gray-900">By email</legend>
+                <legend className="text-sm/6 font-semibold">By email</legend>
                 <div className="mt-6 space-y-6">
                   <div className="flex gap-3">
                     <div className="flex h-6 shrink-0 items-center">
