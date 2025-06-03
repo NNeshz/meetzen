@@ -1,7 +1,13 @@
-import { CompanyRegistrationForm } from "@/modules/company/configuracion/company-form";
+import { ProfileConfiguration } from '@/modules/company/configuracion/profile-configuration'
+import { PersonalConfiguration } from '@/modules/company/configuracion/personal-configuration'
+import { NotificationsConfiguration } from '@/modules/company/configuracion/notifications-configuration'
 
-export default function Page() {
+export default function ConfiguracionPage() {
   return (
-    <CompanyRegistrationForm />
-  );
+    <div>
+      <ProfileConfiguration />
+      <PersonalConfiguration />
+      <NotificationsConfiguration />
+    </div>
+  )
 }

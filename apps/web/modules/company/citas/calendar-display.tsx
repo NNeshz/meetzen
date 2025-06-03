@@ -92,16 +92,16 @@ export function CalendarDisplay() {
   };
 
   return (
-    <div className="overflow-auto space-y-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
-      <div className="flex items-center justify-between">
-        <h4 className="text-2xl font-bold mb-4">
+    <div className="overflow-auto space-y-4 md:space-y-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+      <div className="flex md:flex-row flex-col items-center justify-between space-y-2 md:space-y-0">
+        <h4 className="text-2xl font-bold md:mb-0">
           {formatSpanishMonthYear(startDate)}
         </h4>
         <div className="flex gap-2 items-center">
           <Button variant="outline" onClick={() => handleNavigation("left")}>
             <IconChevronLeft />
           </Button>
-          <Button variant="outline" onClick={handleToday}>
+          <Button variant="outline" onClick={handleToday} className="hidden md:block">
             Hoy
           </Button>
           <Button variant="outline" onClick={() => handleNavigation("right")}>
