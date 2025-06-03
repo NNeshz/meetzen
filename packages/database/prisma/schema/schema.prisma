@@ -18,21 +18,12 @@ enum Role {
 model User {
   id String @id
 
-  // Información general
   name         String
   image        String?
-  description  String?
-  facebookUrl  String?
-  instagramUrl String?
-  tiktokUrl    String?
 
-  // Información adicional
-  nameTag     String?
-  website     String?
   location    String?
   phoneNumber String?
 
-  // Better Auth 
   email               String
   emailVerified       Boolean
   phoneNumberVerified Boolean?
@@ -42,11 +33,11 @@ model User {
   banReason           String?
   banExpires          DateTime?
 
-  // Relaciones
   accounts          Account[]
   sessions          Session[]
   members           Member[]
   invitations       Invitation[]
+  companies         Company[]
 
   createdAt DateTime
   updatedAt DateTime

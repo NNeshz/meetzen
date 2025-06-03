@@ -18,7 +18,6 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "@meetzen/ui/components/sidebar"
-import { ThemeSwitcher } from "@meetzen/ui/src/providers/theme-switcher"
 
 // This is sample data.
 const data = {
@@ -62,7 +61,6 @@ export function CompanySidebar({ ...props }: React.ComponentProps<typeof Sidebar
         <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <ThemeSwitcher />
         <NavUser />
       </SidebarFooter>
     </Sidebar>

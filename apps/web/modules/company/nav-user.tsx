@@ -30,12 +30,15 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@meetzen/ui/src/components/sidebar";
-
+import { useTheme } from "next-themes";
+import { Tabs, TabsList, TabsTrigger } from "@meetzen/ui/src/components/tabs";
+import { Monitor, Moon, Sun } from "lucide-react";
 import { authClient } from "@meetzen/auth/client";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
   const { data: session, isPending } = authClient.useSession();
+  const { setTheme } = useTheme();
 
   if (isPending) {
     return (
@@ -112,6 +115,33 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+              <DropdownMenuItem className="p-0">
+                <Tabs className="w-full">
+                  <TabsList className="grid w-full grid-cols-3 bg-muted/50 p-0">
+                    <TabsTrigger
+                      value="system"
+                      className="flex items-center gap-2 text-xs px-1"
+                      onClick={() => setTheme("system")}
+                    >
+                      <Monitor className="w-4 h-4" />
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="light"
+                      className="flex items-center gap-2 text-xs px-1"
+                      onClick={() => setTheme("light")}
+                    >
+                      <Sun className="w-4 h-4" />
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="dark"
+                      className="flex items-center gap-2 text-xs px-1"
+                      onClick={() => setTheme("dark")}
+                    >
+                      <Moon className="w-4 h-4" />
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              </DropdownMenuItem>
               <DropdownMenuItem>
                 <BadgeCheck />
                 Cuenta

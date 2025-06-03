@@ -1,0 +1,82 @@
+enum EmployeeStatus {
+    ACTIVE
+    INACTIVE
+}
+
+model Company {
+    id String @id @default(cuid())
+
+    // Información general
+    name String
+    image String?
+    companyDescription String?
+
+    // Ubicaciones
+    city String?
+    state String?
+    country String?
+    postalCode String?
+
+    // Google
+    email String?
+    mapsLocation String?
+
+    // Relaciones
+    owner User @relation(fields: [ownerId], references: [id])
+    ownerId String
+
+    // Relaciones
+    employees Employees[]
+    services Services[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([name])
+    @@unique([email])
+    @@unique([ownerId])
+    @@map("company")
+}
+
+model Employees {
+    id String @id @default(cuid())
+
+    // Información general
+    name String
+    phoneNumber String?
+    address String?
+    status EmployeeStatus @default(ACTIVE)
+
+    // Relaciones
+    company Company @relation(fields: [companyId], references: [id])
+    companyId String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([phoneNumber])
+    @@unique([companyId])
+    @@map("employees")
+}
+
+model Services {
+    id String @id @default(cuid())
+
+    // Información general
+    name String
+    description String?
+    price Float
+    modifiedPrice Float?
+    duration Int?
+
+    // Relaciones
+    company Company @relation(fields: [companyId], references: [id])
+    companyId String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([name])
+    @@unique([companyId])
+    @@map("services")
+}

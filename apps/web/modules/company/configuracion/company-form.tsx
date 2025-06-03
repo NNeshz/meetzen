@@ -17,23 +17,26 @@ import { Upload, Facebook, Instagram, Twitter, Linkedin, Youtube, Music } from "
 import Image from "next/image"
 
 const formSchema = z.object({
-  logo: z.string().optional(),
   companyName: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
+  description: z.string().optional(),
+  logo: z.string().optional(),
+
+  // Información de contacto
   phone: z.string().min(7, "El teléfono debe tener al menos 7 dígitos"),
   email: z.string().email("Ingrese un email válido"),
-  website: z.string().optional(),
-  country: z.string().min(1, "Seleccione un país"),
-  city: z.string().min(2, "Ingrese una ciudad válida"),
   zipCode: z.string().min(3, "Ingrese un código postal válido"),
+  city: z.string().min(2, "Ingrese una ciudad válida"),
+  country: z.string().min(1, "Seleccione un país"),
   address: z.string().min(5, "Ingrese una dirección válida"),
-  industry: z.string().min(1, "Seleccione un sector"),
-  description: z.string().optional(),
+  
+  // Información de redes sociales
+  website: z.string().optional(),
   facebook: z.string().optional(),
   instagram: z.string().optional(),
-  twitter: z.string().optional(),
-  linkedin: z.string().optional(),
-  youtube: z.string().optional(),
   tiktok: z.string().optional(),
+
+  // Información de sector
+  industry: z.string().min(1, "Seleccione un sector"),
 })
 
 type FormData = z.infer<typeof formSchema>
