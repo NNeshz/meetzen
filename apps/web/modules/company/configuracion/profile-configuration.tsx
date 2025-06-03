@@ -17,13 +17,13 @@ export function ProfileConfiguration() {
           <div className="px-4 py-6 sm:p-8">
             <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="sm:col-span-4">
-                <label htmlFor="username" className="block text-sm/6 font-medium">
+                <label htmlFor="company" className="block text-sm/6 font-medium">
                   Nombre de la empresa
                 </label>
                 <div className="mt-2">
                   <Input
-                      id="username"
-                      name="username"
+                      id="company"
+                      name="company"
                       type="text"
                       placeholder="janesmith"
                     />
@@ -42,7 +42,7 @@ export function ProfileConfiguration() {
                     defaultValue={''}
                   />
                 </div>
-                <p className="mt-3 text-sm/6 text-muted-foreground">Escribe un par de frases sobre tu negocio.</p>
+                <p className="mt-3 text-sm/6 text-muted-foreground">Describe brevemente tu empresa.</p>
               </div>
 
               <div className="col-span-full">
