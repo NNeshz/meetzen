@@ -1,13 +1,11 @@
 "use client";
 
-import { PasadasHeader } from "@/modules/company/pasadas/pasadas-header";
-import { PasadasTable } from "@/modules/company/pasadas/pasadas-table";
 import { authClient } from "@meetzen/auth/client";
 import Link from "next/link";
 import { cn } from "@meetzen/ui/src/lib/utils";
 import { buttonVariants } from "@meetzen/ui/src/components/button";
 
-export default function CitasPasadasPage() {
+export default function ServiciosPage() {
   const { data: session } = authClient.useSession();
 
   if (!session?.user.companyId) {
@@ -23,10 +21,10 @@ export default function CitasPasadasPage() {
       </div>
     );
   }
+
   return (
-    <div className="space-y-4">
-      <PasadasHeader />
-      <PasadasTable />
+    <div>
+      <h1>Servicios</h1>
     </div>
   );
 }

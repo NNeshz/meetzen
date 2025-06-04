@@ -7,6 +7,7 @@ import {
   HomeIcon,
   Settings2,
   Users2Icon,
+  Blocks
 } from "lucide-react"
 
 import { NavMain } from "./nav-main"
@@ -32,6 +33,11 @@ const data = {
       title: "Citas",
       url: "/company/citas",
       icon: Calendar,
+    },
+    {
+      title: "Servicios",
+      url: "/company/servicios",
+      icon: Blocks,
     },
     {
       title: "Empleados",

@@ -1,7 +1,8 @@
 import { PrismaClient } from "@meetzen/database";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { openAPI } from "better-auth/plugins";
+import { openAPI, admin } from "better-auth/plugins";
+import { user, company } from "@meetzen/auth/utils/permissions";
 
 const prisma = new PrismaClient();
 
@@ -16,7 +17,12 @@ export const auth = betterAuth({
         type: "string",
         required: true,
         input: false,
-        defaultValue: "USER",
+        defaultValue: "user",
+      },
+      companyId: {
+        type: "string",
+        required: false,
+        input: false,
       },
     },
   },
@@ -37,5 +43,14 @@ export const auth = betterAuth({
       enabled: true,
     },
   },
-  plugins: [openAPI()],
+  plugins: [
+    openAPI(),
+    admin({
+      roles: {
+        user,
+        company,
+      },
+      defaultRole: "user",
+    }),
+  ],
 });
