@@ -16,6 +16,13 @@ export const companyRouter = new Elysia({
             format: "image/*",
         })),
         companyDescription: t.String(),
+        availableDays: t.Array(t.String()),
+        phoneNumber: t.String(),
+        mapsLocation: t.String(),
+        startTime: t.String(),
+        endTime: t.String(),
+        pmamStart: t.String(),
+        pmamEnd: t.String(),
     })
 })
 .get("/", ({ companyService, user }) => companyService.getUserCompany(user.id), {

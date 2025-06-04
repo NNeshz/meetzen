@@ -10,21 +10,25 @@ model Company {
     name               String
     image              String
     companyDescription String
+    availableDays      String[]
+    phoneNumber        String
+    mapsLocation       String
+    startTime          String
+    endTime            String
+    pmamStart          String
+    pmamEnd            String
 
     // Ubicaciones
     city       String?
     state      String?
     country    String?
     postalCode String?
-
-    // Google
-    email        String?
-    mapsLocation String?
+    email      String?
 
     // Borrado lógico
     isDeleted Boolean   @default(false)
     deletedAt DateTime?
-    deletedBy String?   // ID del usuario que eliminó el registro
+    deletedBy String? // ID del usuario que eliminó el registro
 
     // Relaciones
     employees Employees[]
@@ -51,17 +55,35 @@ model Employees {
     // Borrado lógico
     isDeleted Boolean   @default(false)
     deletedAt DateTime?
-    deletedBy String?   // ID del usuario que eliminó el registro
+    deletedBy String? // ID del usuario que eliminó el registro
 
     // Relaciones
-    company   Company @relation(fields: [companyId], references: [id])
-    companyId String
+    company      Company                @relation(fields: [companyId], references: [id])
+    companyId    String
+    availability EmployeeAvailability[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     @@unique([phoneNumber])
     @@map("employees")
+}
+
+model EmployeeAvailability {
+    id        String   @id @default(cuid())
+    date      DateTime
+    available Boolean  @default(true)
+    startTime String?
+    endTime   String?
+
+    employee   Employees @relation(fields: [employeeId], references: [id])
+    employeeId String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([employeeId, date])
+    @@map("employee_availability")
 }
 
 model Services {
@@ -77,7 +99,7 @@ model Services {
     // Borrado lógico
     isDeleted Boolean   @default(false)
     deletedAt DateTime?
-    deletedBy String?   // ID del usuario que eliminó el registro
+    deletedBy String? // ID del usuario que eliminó el registro
 
     // Relaciones
     company   Company @relation(fields: [companyId], references: [id])

@@ -5,6 +5,13 @@ export const CompanyService = {
     name: string;
     companyDescription: string;
     image?: File;
+    phoneNumber: string;
+    mapsLocation: string;
+    availableDays: string[];
+    startTime: string;
+    endTime: string;
+    pmamStart: string;
+    pmamEnd: string;
   }) => {
     const response = await apiClient.company.post(body, {
       fetch: {

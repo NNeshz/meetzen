@@ -18,10 +18,23 @@ class ImageServiceError extends Error {
 
 export class ImageService {
   static getPublicImageUrl(imagePath: string): string {
-    // Si ya es una URL completa, extraer solo el path
+    // Si ya es una URL completa, devolverla tal como está
+    if (imagePath.includes('storage/v1/object/public/meetzen/')) {
+      return imagePath;
+    }
+
+    // Si contiene storage/v1/s3/, extraer solo el path después de meetzen/
     if (imagePath.includes('storage/v1/s3/')) {
       const pathParts = imagePath.split('storage/v1/s3/');
-      imagePath = pathParts[1] || imagePath;
+      const fullPath = pathParts[1] || imagePath;
+      
+      // Extraer solo la parte después de meetzen/ si existe
+      if (fullPath.includes('meetzen/')) {
+        const meetzenParts = fullPath.split('meetzen/');
+        imagePath = meetzenParts[1] || fullPath;
+      } else {
+        imagePath = fullPath;
+      }
     }
 
     // Generar URL pública usando el endpoint público de Supabase
@@ -36,14 +49,23 @@ export class ImageService {
   static extractImagePath(imageUrl: string): string {
     if (!imageUrl) return '';
     
-    if (imageUrl.includes('storage/v1/s3/')) {
-      const pathParts = imageUrl.split('storage/v1/s3/');
-      return pathParts[1] || imageUrl;
-    }
-    
+    // Si es una URL completa, extraer solo el path relativo
     if (imageUrl.includes('storage/v1/object/public/meetzen/')) {
       const pathParts = imageUrl.split('storage/v1/object/public/meetzen/');
       return pathParts[1] || imageUrl;
+    }
+    
+    if (imageUrl.includes('storage/v1/s3/')) {
+      const pathParts = imageUrl.split('storage/v1/s3/');
+      const fullPath = pathParts[1] || imageUrl;
+      
+      // Si contiene meetzen/, extraer solo la parte después
+      if (fullPath.includes('meetzen/')) {
+        const meetzenParts = fullPath.split('meetzen/');
+        return meetzenParts[1] || fullPath;
+      }
+      
+      return fullPath;
     }
 
     return imageUrl;
