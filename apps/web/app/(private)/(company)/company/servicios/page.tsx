@@ -5,6 +5,9 @@ import Link from "next/link";
 import { cn } from "@meetzen/ui/src/lib/utils";
 import { buttonVariants } from "@meetzen/ui/src/components/button";
 
+import { ServiciosHeader } from "@/modules/company/servicios/servicios-header";
+import { ServiciosTable } from "@/modules/company/servicios/servicios-table";
+
 export default function ServiciosPage() {
   const { data: session } = authClient.useSession();
 
@@ -23,8 +26,9 @@ export default function ServiciosPage() {
   }
 
   return (
-    <div>
-      <h1>Servicios</h1>
+    <div className="space-y-4">
+      <ServiciosHeader />
+      <ServiciosTable />
     </div>
   );
 }
