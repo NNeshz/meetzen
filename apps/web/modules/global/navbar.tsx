@@ -57,7 +57,7 @@ export function Navbar() {
           <div className="hidden md:block">
             {session ? (
               <Link
-                href={role === "USER" ? "/user" : "/company"}
+                href={role === "user" ? "/user" : "/company"}
                 className={cn(buttonVariants({ variant: "default" }))}
               >
                 {session.user.name}
@@ -159,7 +159,7 @@ export function Navbar() {
             <div className="flex gap-4 mt-10">
               {session ? (
                 <Link
-                  href={role === "USER" ? "/user" : "/company"}
+                  href={role === "user" ? "/user" : "/company"}
                   className={cn(
                     buttonVariants({ variant: "default", className: "w-full" })
                   )}

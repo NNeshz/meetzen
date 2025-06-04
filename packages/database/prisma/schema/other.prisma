@@ -7,34 +7,31 @@ model Company {
     id String @id @default(cuid())
 
     // Información general
-    name String
-    image String?
+    name               String
+    image              String?
     companyDescription String?
 
     // Ubicaciones
-    city String?
-    state String?
-    country String?
+    city       String?
+    state      String?
+    country    String?
     postalCode String?
 
     // Google
-    email String?
+    email        String?
     mapsLocation String?
 
     // Relaciones
-    owner User @relation(fields: [ownerId], references: [id])
-    ownerId String
-
-    // Relaciones
     employees Employees[]
-    services Services[]
+    services  Services[]
+
+    users User[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     @@unique([name])
     @@unique([email])
-    @@unique([ownerId])
     @@map("company")
 }
 
@@ -42,13 +39,13 @@ model Employees {
     id String @id @default(cuid())
 
     // Información general
-    name String
+    name        String
     phoneNumber String?
-    address String?
-    status EmployeeStatus @default(ACTIVE)
+    address     String?
+    status      EmployeeStatus @default(ACTIVE)
 
     // Relaciones
-    company Company @relation(fields: [companyId], references: [id])
+    company   Company @relation(fields: [companyId], references: [id])
     companyId String
 
     createdAt DateTime @default(now())
@@ -63,14 +60,14 @@ model Services {
     id String @id @default(cuid())
 
     // Información general
-    name String
-    description String?
-    price Float
+    name          String
+    description   String?
+    price         Float
     modifiedPrice Float?
-    duration Int?
+    duration      Int?
 
     // Relaciones
-    company Company @relation(fields: [companyId], references: [id])
+    company   Company @relation(fields: [companyId], references: [id])
     companyId String
 
     createdAt DateTime @default(now())

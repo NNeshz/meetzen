@@ -18,26 +18,28 @@ enum Role {
 model User {
   id String @id
 
-  name         String
-  image        String?
+  name  String
+  image String?
 
   location    String?
   phoneNumber String?
+  companyId   String?
 
   email               String
   emailVerified       Boolean
   phoneNumberVerified Boolean?
   isAnonymous         Boolean?
-  role                Role
+  role                String
   banned              Boolean?
   banReason           String?
   banExpires          DateTime?
 
-  accounts          Account[]
-  sessions          Session[]
-  members           Member[]
-  invitations       Invitation[]
-  companies         Company[]
+  accounts    Account[]
+  sessions    Session[]
+  members     Member[]
+  invitations Invitation[]
+
+  company   Company? @relation(fields: [companyId], references: [id])
 
   createdAt DateTime
   updatedAt DateTime
