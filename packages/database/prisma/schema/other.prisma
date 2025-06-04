@@ -21,11 +21,15 @@ model Company {
     email        String?
     mapsLocation String?
 
+    // Borrado lógico
+    isDeleted Boolean   @default(false)
+    deletedAt DateTime?
+    deletedBy String?   // ID del usuario que eliminó el registro
+
     // Relaciones
     employees Employees[]
     services  Services[]
-
-    users User[]
+    users     User[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -44,6 +48,11 @@ model Employees {
     address     String?
     status      EmployeeStatus @default(ACTIVE)
 
+    // Borrado lógico
+    isDeleted Boolean   @default(false)
+    deletedAt DateTime?
+    deletedBy String?   // ID del usuario que eliminó el registro
+
     // Relaciones
     company   Company @relation(fields: [companyId], references: [id])
     companyId String
@@ -52,7 +61,6 @@ model Employees {
     updatedAt DateTime @updatedAt
 
     @@unique([phoneNumber])
-    @@unique([companyId])
     @@map("employees")
 }
 
@@ -61,10 +69,15 @@ model Services {
 
     // Información general
     name          String
-    description   String?
     price         Float
     modifiedPrice Float?
-    duration      Int?
+    duration      Int
+    lastUse       DateTime?
+
+    // Borrado lógico
+    isDeleted Boolean   @default(false)
+    deletedAt DateTime?
+    deletedBy String?   // ID del usuario que eliminó el registro
 
     // Relaciones
     company   Company @relation(fields: [companyId], references: [id])
@@ -74,6 +87,5 @@ model Services {
     updatedAt DateTime @updatedAt
 
     @@unique([name])
-    @@unique([companyId])
     @@map("services")
 }

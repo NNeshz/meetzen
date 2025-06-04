@@ -36,5 +36,23 @@ export const betterAuthPlugin = new Elysia({ name: "better-auth-plugin"})
                 session: session.session
             }  
         }
+    },
+    hasCompany: {
+        async resolve({ error, request: { headers }}) {
+            const session = await auth.api.getSession({
+                headers,
+            })
+
+            if (!session) return error(401)
+
+            const company = session.user.companyId
+
+            if (!company) return error(403)
+
+            return {
+                user: session.user,
+                session: session.session
+            }  
+        }
     }
 })

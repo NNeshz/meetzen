@@ -17,9 +17,6 @@ class ImageServiceError extends Error {
 }
 
 export class ImageService {
-  /**
-   * Genera la URL pública para acceder a una imagen
-   */
   static getPublicImageUrl(imagePath: string): string {
     // Si ya es una URL completa, extraer solo el path
     if (imagePath.includes('storage/v1/s3/')) {
@@ -33,30 +30,22 @@ export class ImageService {
       throw new ImageServiceError("Supabase URL is not configured");
     }
 
-    // El bucket se llama "meetzen", así que la URL pública será:
-    // https://tu-supabase-url/storage/v1/object/public/meetzen/company/archivo.webp
     return `${supabaseUrl}/storage/v1/object/public/meetzen/${imagePath}`;
   }
 
-  /**
-   * Extrae el path relativo de una URL completa
-   */
   static extractImagePath(imageUrl: string): string {
     if (!imageUrl) return '';
     
-    // Si contiene el path de storage interno, extraerlo
     if (imageUrl.includes('storage/v1/s3/')) {
       const pathParts = imageUrl.split('storage/v1/s3/');
       return pathParts[1] || imageUrl;
     }
     
-    // Si contiene el path público, extraerlo (considerando el bucket meetzen)
     if (imageUrl.includes('storage/v1/object/public/meetzen/')) {
       const pathParts = imageUrl.split('storage/v1/object/public/meetzen/');
       return pathParts[1] || imageUrl;
     }
 
-    // Si es solo el path, devolverlo tal como está
     return imageUrl;
   }
 
@@ -109,8 +98,6 @@ export class ImageService {
       if (!imageUrl) {
         throw new ImageServiceError("Image URL is required");
       }
-
-      // Extraer el path relativo de la URL
       const imagePath = ImageService.extractImagePath(imageUrl);
       
       if (!imagePath) {
