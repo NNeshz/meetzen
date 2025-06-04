@@ -49,6 +49,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { ServiciosFilters } from "@/modules/company/servicios/servicios-filter";
+import { formatDate } from "@/utils/format-date";
 import { useServicios } from "@/modules/company/servicios/hooks/useServicios";
 
 interface Service {
@@ -59,25 +60,6 @@ interface Service {
   createdAt: Date;
   lastUse: Date | null;
 }
-
-// Función para formatear fechas
-const formatDate = (date: Date | null | string) => {
-  if (!date) return "";
-  
-  // Convertir a Date si es string
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  
-  // Verificar si la fecha es válida
-  if (isNaN(dateObj.getTime())) {
-    return "Fecha inválida";
-  }
-  
-  return new Intl.DateTimeFormat('es-ES', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  }).format(dateObj);
-};
 
 // Componente de Loading
 const LoadingState = () => (

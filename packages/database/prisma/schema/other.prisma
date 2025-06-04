@@ -48,8 +48,8 @@ model Employees {
 
     // Información general
     name        String
-    phoneNumber String?
-    address     String?
+    phoneNumber String
+    address     String
     status      EmployeeStatus @default(ACTIVE)
 
     // Borrado lógico
