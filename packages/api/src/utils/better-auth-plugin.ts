@@ -27,7 +27,7 @@ export const betterAuthPlugin = new Elysia({ name: "better-auth-plugin"})
             if (!session) return error(401)
 
             const role = session.user.role
-            const hasCompanyRole = role?.split(",").includes("company")
+            const hasCompanyRole = role?.split(",").includes("COMPANY")
 
             if (!hasCompanyRole) return error(403)
 

@@ -11,7 +11,7 @@ export const signInWithGoogle = async () => {
     throw new Error(response.error.message);
   }
 
-  return response.data;
+  return response.data
 };
 
 export const getSession = async () => {

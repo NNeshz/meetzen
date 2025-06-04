@@ -22,6 +22,7 @@ export default function CitasPage() {
       </div>
     );
   }
+
   return (
     <div className="pb-4">
       <CalendarDisplay />

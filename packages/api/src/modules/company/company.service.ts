@@ -4,13 +4,13 @@ import { ImageService } from "@meetzen/api/src/modules/s3";
 export class CompanyService {
     private imageService: ImageService;
 
-    constructor(imageService: ImageService) {
-        this.imageService = imageService;
+    constructor() {
+        this.imageService = new ImageService();
     }
 
     async createCompany(body: {
         name: string;
-        image: File;
+        image?: File;
         companyDescription: string;
     }, userId: string) {
         try {
@@ -26,6 +26,10 @@ export class CompanyService {
 
             if (existingUser.companyId) {
                 throw new Error("El usuario ya pertenece a una compañía");
+            }
+
+            if (!body.image) {
+                throw new Error("Debe seleccionar una imagen");
             }
 
             // Verificar que no existe una compañía con el mismo nombre
@@ -78,6 +82,7 @@ export class CompanyService {
             };
 
         } catch (error) {
+            console.log(error);
             // Si hay error después de subir la imagen, idealmente deberías eliminarla
             // await this.imageService.deleteImage(imageUrl);
             
@@ -90,29 +95,50 @@ export class CompanyService {
     }
 
     async getUserCompany(userId: string) {
-        const user = await prisma.user.findUnique({
-            where: { id: userId },
-            include: {
-                company: {
-                    include: {
-                        employees: true,
-                        services: true,
-                        _count: {
-                            select: {
-                                employees: true,
-                                services: true
-                            }
-                        }
-                    }
+        try {
+            const user = await prisma.user.findUnique({
+                where: { id: userId },
+                select: { companyId: true }
+            })
+        
+            if (!user) {
+                throw new Error("Usuario no encontrado");
+            }
+        
+            if (!user.companyId) {
+                throw new Error("Usuario no tiene una compañía asignada");
+            }
+        
+            const company = await prisma.company.findUnique({
+                where: { id: user.companyId },
+                select: { name: true, image: true, companyDescription: true }
+            })
+        
+            if (!company) {
+                throw new Error("Usuario no encontrado");
+            }
+        
+            // Convertir la URL interna a URL pública si existe una imagen
+            const publicImageUrl = company.image 
+                ? ImageService.getPublicImageUrl(company.image)
+                : company.image;
+        
+            return {
+                success: true,
+                message: "Compañía obtenida exitosamente",
+                data: {
+                    ...company,
+                    image: publicImageUrl
                 }
             }
-        });
-
-        if (!user) {
-            throw new Error("Usuario no encontrado");
+        } catch (error) {
+            console.log(error);
+            throw new Error(
+                error instanceof Error 
+                    ? error.message 
+                    : "Error al obtener la compañía"
+            );
         }
-
-        return user.company;
     }
 
     async updateCompany(companyId: string, userId: string, data: {
