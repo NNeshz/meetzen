@@ -8,8 +8,8 @@ model Company {
 
     // Información general
     name               String
-    image              String?
-    companyDescription String?
+    image              String
+    companyDescription String
 
     // Ubicaciones
     city       String?

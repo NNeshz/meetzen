@@ -17,6 +17,49 @@ class ImageServiceError extends Error {
 }
 
 export class ImageService {
+  /**
+   * Genera la URL pública para acceder a una imagen
+   */
+  static getPublicImageUrl(imagePath: string): string {
+    // Si ya es una URL completa, extraer solo el path
+    if (imagePath.includes('storage/v1/s3/')) {
+      const pathParts = imagePath.split('storage/v1/s3/');
+      imagePath = pathParts[1] || imagePath;
+    }
+
+    // Generar URL pública usando el endpoint público de Supabase
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+    if (!supabaseUrl) {
+      throw new ImageServiceError("Supabase URL is not configured");
+    }
+
+    // El bucket se llama "meetzen", así que la URL pública será:
+    // https://tu-supabase-url/storage/v1/object/public/meetzen/company/archivo.webp
+    return `${supabaseUrl}/storage/v1/object/public/meetzen/${imagePath}`;
+  }
+
+  /**
+   * Extrae el path relativo de una URL completa
+   */
+  static extractImagePath(imageUrl: string): string {
+    if (!imageUrl) return '';
+    
+    // Si contiene el path de storage interno, extraerlo
+    if (imageUrl.includes('storage/v1/s3/')) {
+      const pathParts = imageUrl.split('storage/v1/s3/');
+      return pathParts[1] || imageUrl;
+    }
+    
+    // Si contiene el path público, extraerlo (considerando el bucket meetzen)
+    if (imageUrl.includes('storage/v1/object/public/meetzen/')) {
+      const pathParts = imageUrl.split('storage/v1/object/public/meetzen/');
+      return pathParts[1] || imageUrl;
+    }
+
+    // Si es solo el path, devolverlo tal como está
+    return imageUrl;
+  }
+
   async createImage(image: File, userId: string, folder: ImageFolder) {
     try {
       if (!image) {
@@ -38,12 +81,9 @@ export class ImageService {
           throw new ImageServiceError("Failed to upload image to storage");
         }
 
-        if (!process.env.SUPABASE_URL_BUCKET) {
-          throw new ImageServiceError("Storage bucket URL is not configured");
-        }
-
-        const imageUrl = `${process.env.SUPABASE_URL_BUCKET}/${filePath}`;
-        return imageUrl;
+        // Generar URL pública en lugar de la URL interna
+        const publicImageUrl = ImageService.getPublicImageUrl(filePath);
+        return publicImageUrl;
       } catch (error) {
         if (error instanceof Error) {
           throw new ImageServiceError(
@@ -70,20 +110,14 @@ export class ImageService {
         throw new ImageServiceError("Image URL is required");
       }
 
-      if (!process.env.SUPABASE_URL_BUCKET) {
-        throw new ImageServiceError("Storage bucket URL is not configured");
-      }
-
-      const oldImagePath = imageUrl.replace(
-        `${process.env.SUPABASE_URL_BUCKET}/`,
-        ""
-      );
-
-      if (oldImagePath === imageUrl) {
+      // Extraer el path relativo de la URL
+      const imagePath = ImageService.extractImagePath(imageUrl);
+      
+      if (!imagePath) {
         throw new ImageServiceError("Invalid image URL format");
       }
 
-      await supabaseS3.delete(oldImagePath);
+      await supabaseS3.delete(imagePath);
       return true;
     } catch (error) {
       if (error instanceof ImageServiceError) {

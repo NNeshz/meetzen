@@ -12,9 +12,9 @@ export const companyRouter = new Elysia({
     company: true,
     body: t.Object({
         name: t.String(),
-        image: t.File({
+        image: t.Optional(t.File({
             format: "image/*",
-        }),
+        })),
         companyDescription: t.String(),
     })
 })

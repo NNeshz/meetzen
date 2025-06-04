@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
       },
     },
   });
-
+  
   if (!data && (pathname.startsWith("/company") || pathname.startsWith("/user"))) {
     return NextResponse.redirect(new URL("/auth", request.url));
   }
@@ -25,7 +25,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/user", request.url));
   }
 
-  if (data && data.user.role === "company" && pathname.startsWith("/user")) {
+  if (data && data.user.role === "COMPANY" && pathname.startsWith("/user")) {
     return NextResponse.redirect(new URL("/company", request.url));
   }
 
@@ -33,5 +33,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/company", "/user", "/auth"],
+  matcher: ["/company", "/user", "/auth", "/company/:path*", "/user/:path*"],
 };
