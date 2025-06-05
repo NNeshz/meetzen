@@ -17,14 +17,24 @@ class ImageServiceError extends Error {
 }
 
 export class ImageService {
-  /**
-   * Genera la URL pública para acceder a una imagen
-   */
   static getPublicImageUrl(imagePath: string): string {
-    // Si ya es una URL completa, extraer solo el path
+    // Si ya es una URL completa, devolverla tal como está
+    if (imagePath.includes('storage/v1/object/public/meetzen/')) {
+      return imagePath;
+    }
+
+    // Si contiene storage/v1/s3/, extraer solo el path después de meetzen/
     if (imagePath.includes('storage/v1/s3/')) {
       const pathParts = imagePath.split('storage/v1/s3/');
-      imagePath = pathParts[1] || imagePath;
+      const fullPath = pathParts[1] || imagePath;
+      
+      // Extraer solo la parte después de meetzen/ si existe
+      if (fullPath.includes('meetzen/')) {
+        const meetzenParts = fullPath.split('meetzen/');
+        imagePath = meetzenParts[1] || fullPath;
+      } else {
+        imagePath = fullPath;
+      }
     }
 
     // Generar URL pública usando el endpoint público de Supabase
@@ -33,30 +43,31 @@ export class ImageService {
       throw new ImageServiceError("Supabase URL is not configured");
     }
 
-    // El bucket se llama "meetzen", así que la URL pública será:
-    // https://tu-supabase-url/storage/v1/object/public/meetzen/company/archivo.webp
     return `${supabaseUrl}/storage/v1/object/public/meetzen/${imagePath}`;
   }
 
-  /**
-   * Extrae el path relativo de una URL completa
-   */
   static extractImagePath(imageUrl: string): string {
     if (!imageUrl) return '';
     
-    // Si contiene el path de storage interno, extraerlo
-    if (imageUrl.includes('storage/v1/s3/')) {
-      const pathParts = imageUrl.split('storage/v1/s3/');
-      return pathParts[1] || imageUrl;
-    }
-    
-    // Si contiene el path público, extraerlo (considerando el bucket meetzen)
+    // Si es una URL completa, extraer solo el path relativo
     if (imageUrl.includes('storage/v1/object/public/meetzen/')) {
       const pathParts = imageUrl.split('storage/v1/object/public/meetzen/');
       return pathParts[1] || imageUrl;
     }
+    
+    if (imageUrl.includes('storage/v1/s3/')) {
+      const pathParts = imageUrl.split('storage/v1/s3/');
+      const fullPath = pathParts[1] || imageUrl;
+      
+      // Si contiene meetzen/, extraer solo la parte después
+      if (fullPath.includes('meetzen/')) {
+        const meetzenParts = fullPath.split('meetzen/');
+        return meetzenParts[1] || fullPath;
+      }
+      
+      return fullPath;
+    }
 
-    // Si es solo el path, devolverlo tal como está
     return imageUrl;
   }
 
@@ -109,8 +120,6 @@ export class ImageService {
       if (!imageUrl) {
         throw new ImageServiceError("Image URL is required");
       }
-
-      // Extraer el path relativo de la URL
       const imagePath = ImageService.extractImagePath(imageUrl);
       
       if (!imagePath) {

@@ -25,7 +25,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/user", request.url));
   }
 
-  if (data && data.user.role === "COMPANY" && pathname.startsWith("/user")) {
+  if (data && data.user.role === "company" && pathname.startsWith("/user")) {
     return NextResponse.redirect(new URL("/company", request.url));
   }
 

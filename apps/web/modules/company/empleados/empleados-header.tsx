@@ -1,5 +1,4 @@
-import { Button } from "@meetzen/ui/src/components/button";
-import { IconUserPlus } from "@tabler/icons-react";
+import { EmployeeResponsiveCreate } from "@/modules/company/empleados/empleados-responsive-create";
 
 export function EmpleadosHeader() {
   return (
@@ -10,10 +9,7 @@ export function EmpleadosHeader() {
           Administra los empleados de tu empresa
         </p>
       </div>
-      <Button variant="default">
-        <IconUserPlus />
-        Agregar Empleado
-      </Button>
+      <EmployeeResponsiveCreate />
     </div>
   );
 }

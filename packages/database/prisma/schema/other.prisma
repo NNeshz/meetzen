@@ -3,6 +3,16 @@ enum EmployeeStatus {
     INACTIVE
 }
 
+enum WeekDay {
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+    SUNDAY
+}
+
 model Company {
     id String @id @default(cuid())
 
@@ -10,22 +20,30 @@ model Company {
     name               String
     image              String
     companyDescription String
+    availableDays      WeekDay[]
+    phoneNumber        String
+    mapsLocation       String
+    startTime          String
+    endTime            String
+    pmamStart          String
+    pmamEnd            String
 
     // Ubicaciones
     city       String?
     state      String?
     country    String?
     postalCode String?
+    email      String?
 
-    // Google
-    email        String?
-    mapsLocation String?
+    // Borrado lógico
+    isDeleted Boolean   @default(false)
+    deletedAt DateTime?
+    deletedBy String? // ID del usuario que eliminó el registro
 
     // Relaciones
     employees Employees[]
     services  Services[]
-
-    users User[]
+    users     User[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -40,20 +58,42 @@ model Employees {
 
     // Información general
     name        String
-    phoneNumber String?
-    address     String?
+    phoneNumber String
+    address     String
     status      EmployeeStatus @default(ACTIVE)
 
+    // Borrado lógico
+    isDeleted Boolean   @default(false)
+    deletedAt DateTime?
+    deletedBy String? // ID del usuario que eliminó el registro
+
     // Relaciones
-    company   Company @relation(fields: [companyId], references: [id])
-    companyId String
+    company      Company                @relation(fields: [companyId], references: [id])
+    companyId    String
+    availability EmployeeAvailability[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     @@unique([phoneNumber])
-    @@unique([companyId])
     @@map("employees")
+}
+
+model EmployeeAvailability {
+    id        String   @id @default(cuid())
+    date      DateTime
+    available Boolean  @default(true)
+    startTime String?
+    endTime   String?
+
+    employee   Employees @relation(fields: [employeeId], references: [id])
+    employeeId String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([employeeId, date])
+    @@map("employee_availability")
 }
 
 model Services {
@@ -61,10 +101,15 @@ model Services {
 
     // Información general
     name          String
-    description   String?
     price         Float
     modifiedPrice Float?
-    duration      Int?
+    duration      Int
+    lastUse       DateTime?
+
+    // Borrado lógico
+    isDeleted Boolean   @default(false)
+    deletedAt DateTime?
+    deletedBy String? // ID del usuario que eliminó el registro
 
     // Relaciones
     company   Company @relation(fields: [companyId], references: [id])
@@ -74,6 +119,5 @@ model Services {
     updatedAt DateTime @updatedAt
 
     @@unique([name])
-    @@unique([companyId])
     @@map("services")
 }

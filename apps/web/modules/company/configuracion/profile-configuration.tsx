@@ -1,10 +1,10 @@
-"use client";
+"use client"
 
-import type React from "react";
+import type React from "react"
 
-import { Button } from "@meetzen/ui/src/components/button";
-import { Input } from "@meetzen/ui/src/components/input";
-import { Textarea } from "@meetzen/ui/src/components/textarea";
+import { Button } from "@meetzen/ui/src/components/button"
+import { Input } from "@meetzen/ui/src/components/input"
+import { Textarea } from "@meetzen/ui/src/components/textarea"
 import {
   Form,
   FormControl,
@@ -13,19 +13,22 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@meetzen/ui/src/components/form";
-import { toast } from "sonner";
+} from "@meetzen/ui/src/components/form"
+import { toast } from "sonner"
 
-import { Camera, Loader2 } from "lucide-react";
-import Image from "next/image";
+import { Camera, Loader2 } from "lucide-react"
+import Image from "next/image"
 
-import { useState, useRef, useEffect } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { useState, useRef, useEffect } from "react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
-import { useCompany } from "@/modules/company/configuracion/hooks/useCompany";
-import { CompanyService } from "@/modules/company/configuracion/services/company-service";
+import { useCompany } from "@/modules/company/configuracion/hooks/useCompany"
+import { CompanyService } from "@/modules/company/configuracion/services/company-service"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@meetzen/ui/src/components/select"
+import { Checkbox } from "@meetzen/ui/src/components/checkbox"
+import { WeekDay } from "@meetzen/database"
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -34,29 +37,77 @@ const formSchema = z.object({
   companyDescription: z.string().min(20, {
     message: "La descripción debe tener al menos 20 caracteres.",
   }),
-  image: z.instanceof(File, {
-    message: "Debe seleccionar una imagen.",
-  }).optional(),
-});
+  image: z
+    .instanceof(File, {
+      message: "Debe seleccionar una imagen.",
+    })
+    .optional(),
+  phoneNumber: z.string().min(10, {
+    message: "El número telefónico debe tener al menos 10 dígitos.",
+  }),
+  mapsLocation: z.string().min(2, {
+    message: "La ubicación es requerida.",
+  }),
+  availableDays: z.array(z.enum(["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]),).min(1, {
+    message: "Selecciona al menos un día disponible.",
+  }),
+  startTime: z.string().min(1, {
+    message: "La hora de inicio es requerida.",
+  }),
+  endTime: z.string().min(1, {
+    message: "La hora de cierre es requerida.",
+  }),
+  pmamStart: z.string().min(1, {
+    message: "Selecciona AM o PM para la hora de inicio.",
+  }),
+  pmamEnd: z.string().min(1, {
+    message: "Selecciona AM o PM para la hora de cierre.",
+  }),
+})
+
+// Mapeo de días en inglés a español
+const dayLabels: Record<WeekDay, string> = {
+  [WeekDay.MONDAY]: "Lunes",
+  [WeekDay.TUESDAY]: "Martes", 
+  [WeekDay.WEDNESDAY]: "Miércoles",
+  [WeekDay.THURSDAY]: "Jueves",
+  [WeekDay.FRIDAY]: "Viernes",
+  [WeekDay.SATURDAY]: "Sábado",
+  [WeekDay.SUNDAY]: "Domingo",
+}
 
 export function ProfileConfiguration() {
-  const { data: company, refetch, isLoading: isLoadingCompany } = useCompany();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const { data: company, refetch, isLoading: isLoadingCompany } = useCompany()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [previewImage, setPreviewImage] = useState<string | null>(null)
   const [originalData, setOriginalData] = useState<{
-    name: string;
-    companyDescription: string;
-    image: string | null;
-  } | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+    name: string
+    companyDescription: string
+    image: string | null
+    phoneNumber: string
+    mapsLocation: string
+    availableDays: WeekDay[]
+    startTime: string
+    endTime: string
+    pmamStart: string
+    pmamEnd: string
+  } | null>(null)
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       companyDescription: "",
+      phoneNumber: "",
+      mapsLocation: "",
+      availableDays: [],
+      startTime: "",
+      endTime: "",
+      pmamStart: "AM",
+      pmamEnd: "PM",
     },
-  });
+  })
 
   useEffect(() => {
     if (company?.success && company.data) {
@@ -64,58 +115,79 @@ export function ProfileConfiguration() {
         name: company.data.name || "",
         companyDescription: company.data.companyDescription || "",
         image: company.data.image || null,
-      };
-      
+        phoneNumber: company.data.phoneNumber || "",
+        mapsLocation: company.data.mapsLocation || "",
+        availableDays: company.data.availableDays || [],
+        startTime: company.data.startTime || "",
+        endTime: company.data.endTime || "",
+        pmamStart: company.data.pmamStart || "AM",
+        pmamEnd: company.data.pmamEnd || "PM",
+      }
+
       // Establecer los datos originales
-      setOriginalData(companyData);
-      
+      setOriginalData(companyData)
+
       // Establecer los valores del formulario
-      form.setValue("name", companyData.name);
-      form.setValue("companyDescription", companyData.companyDescription);
-      
+      form.setValue("name", companyData.name)
+      form.setValue("companyDescription", companyData.companyDescription)
+      form.setValue("phoneNumber", companyData.phoneNumber)
+      form.setValue("mapsLocation", companyData.mapsLocation)
+      form.setValue("availableDays", companyData.availableDays)
+      form.setValue("startTime", companyData.startTime)
+      form.setValue("endTime", companyData.endTime)
+      form.setValue("pmamStart", companyData.pmamStart)
+      form.setValue("pmamEnd", companyData.pmamEnd)
+
       if (companyData.image) {
-        setPreviewImage(companyData.image);
+        setPreviewImage(companyData.image)
       }
     }
-  }, [company, form]);
+  }, [company, form])
 
   function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
+    const file = event.target.files?.[0]
     if (file) {
-      const reader = new FileReader();
+      const reader = new FileReader()
       reader.onloadend = () => {
-        setPreviewImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-      form.setValue("image", file);
+        setPreviewImage(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+      form.setValue("image", file)
     }
   }
 
   function handleImageClick() {
-    fileInputRef.current?.click();
+    fileInputRef.current?.click()
   }
 
   function handleCancel() {
     if (originalData) {
-      form.setValue("name", originalData.name);
-      form.setValue("companyDescription", originalData.companyDescription);
-      form.setValue("image", undefined);
-      
+      form.setValue("name", originalData.name)
+      form.setValue("companyDescription", originalData.companyDescription)
+      form.setValue("image", undefined)
+      form.setValue("phoneNumber", originalData.phoneNumber)
+      form.setValue("mapsLocation", originalData.mapsLocation)
+      form.setValue("availableDays", originalData.availableDays)
+      form.setValue("startTime", originalData.startTime)
+      form.setValue("endTime", originalData.endTime)
+      form.setValue("pmamStart", originalData.pmamStart)
+      form.setValue("pmamEnd", originalData.pmamEnd)
+
       // Resetear preview de imagen
-      setPreviewImage(originalData.image);
+      setPreviewImage(originalData.image)
     }
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true);
+    setIsLoading(true)
     try {
-      await CompanyService.createBasicInformation(values);
-      await refetch();
-      toast.success("Información guardada exitosamente");
+      await CompanyService.createBasicInformation(values)
+      await refetch()
+      toast.success("Información guardada exitosamente")
     } catch (error) {
-      toast.error("Error al guardar la información");
+      toast.error("Error al guardar la información")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
   }
 
@@ -126,8 +198,7 @@ export function ProfileConfiguration() {
         <div className="px-4 sm:px-0">
           <h2 className="text-base/7 font-semibold">Perfil de la empresa</h2>
           <p className="mt-1 text-sm/6 text-muted-foreground">
-            Esta información será mostrada públicamente, por lo que ten cuidado al
-            compartir.
+            Esta información será mostrada públicamente, por lo que ten cuidado al compartir.
           </p>
         </div>
 
@@ -140,7 +211,7 @@ export function ProfileConfiguration() {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -148,8 +219,7 @@ export function ProfileConfiguration() {
       <div className="px-4 sm:px-0">
         <h2 className="text-base/7 font-semibold">Perfil de la empresa</h2>
         <p className="mt-1 text-sm/6 text-muted-foreground">
-          Esta información será mostrada públicamente, por lo que ten cuidado al
-          compartir.
+          Esta información será mostrada públicamente, por lo que ten cuidado al compartir.
         </p>
       </div>
 
@@ -166,12 +236,11 @@ export function ProfileConfiguration() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Nombre de la empresa<span className="text-red-500">*</span></FormLabel>
+                      <FormLabel>
+                        Nombre de la empresa<span className="text-red-500">*</span>
+                      </FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="Ingresa el nombre de tu empresa"
-                          {...field}
-                        />
+                        <Input placeholder="Ingresa el nombre de tu empresa" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -185,17 +254,13 @@ export function ProfileConfiguration() {
                   name="companyDescription"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Descripción de la empresa<span className="text-red-500">*</span></FormLabel>
+                      <FormLabel>
+                        Descripción de la empresa<span className="text-red-500">*</span>
+                      </FormLabel>
                       <FormControl>
-                        <Textarea
-                          rows={3}
-                          placeholder="Describe brevemente tu empresa..."
-                          {...field}
-                        />
+                        <Textarea rows={3} placeholder="Describe brevemente tu empresa..." {...field} />
                       </FormControl>
-                      <FormDescription>
-                        Describe brevemente tu empresa.
-                      </FormDescription>
+                      <FormDescription>Describe brevemente tu empresa.</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -208,7 +273,9 @@ export function ProfileConfiguration() {
                   name="image"
                   render={() => (
                     <FormItem>
-                      <FormLabel>Logo de la empresa<span className="text-red-500">*</span></FormLabel>
+                      <FormLabel>
+                        Logo de la empresa<span className="text-red-500">*</span>
+                      </FormLabel>
                       <FormControl>
                         <div
                           className="relative w-full aspect-square max-w-xs border-2 border-dashed border-input rounded-lg overflow-hidden cursor-pointer hover:border-primary/50 transition-colors"
@@ -216,7 +283,7 @@ export function ProfileConfiguration() {
                         >
                           {previewImage ? (
                             <Image
-                              src={previewImage}
+                              src={previewImage || "/placeholder.svg"}
                               alt="Vista previa del logo"
                               fill
                               className="object-cover"
@@ -224,12 +291,8 @@ export function ProfileConfiguration() {
                           ) : (
                             <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
                               <Camera className="w-12 h-12 mb-2" />
-                              <p className="text-sm text-center px-2">
-                                Haz clic para subir el logo
-                              </p>
-                              <p className="text-xs text-center px-2 mt-1">
-                                PNG, JPG hasta 10MB
-                              </p>
+                              <p className="text-sm text-center px-2">Haz clic para subir el logo</p>
+                              <p className="text-xs text-center px-2 mt-1">PNG, JPG hasta 10MB</p>
                             </div>
                           )}
                           <input
@@ -241,14 +304,198 @@ export function ProfileConfiguration() {
                           />
                         </div>
                       </FormControl>
-                      <FormDescription>
-                        Sube el logo de tu empresa. Se mostrará en tu perfil
-                        público.
-                      </FormDescription>
+                      <FormDescription>Sube el logo de tu empresa. Se mostrará en tu perfil público.</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+              </div>
+
+              <div className="col-span-full">
+                <FormField
+                  control={form.control}
+                  name="phoneNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        Número telefónico<span className="text-red-500">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input placeholder="Ingresa el número telefónico" {...field} />
+                      </FormControl>
+                      <FormDescription>Número de contacto para tus clientes.</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="col-span-full">
+                <FormField
+                  control={form.control}
+                  name="mapsLocation"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        Ubicación<span className="text-red-500">*</span>
+                      </FormLabel>
+                        <FormControl>
+                          <Input placeholder="Ingresa la ubicación de tu empresa" {...field} />
+                        </FormControl>            
+                      <FormDescription>Ubicación de tu empresa en Google Maps.</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="col-span-full">
+                <FormField
+                  control={form.control}
+                  name="availableDays"
+                  render={() => (
+                    <FormItem>
+                      <div className="mb-4">
+                        <FormLabel>
+                          Días disponibles<span className="text-red-500">*</span>
+                        </FormLabel>
+                        <FormDescription>Selecciona los días en que tu empresa está abierta.</FormDescription>
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        {[WeekDay.MONDAY, WeekDay.TUESDAY, WeekDay.WEDNESDAY, WeekDay.THURSDAY, WeekDay.FRIDAY, WeekDay.SATURDAY, WeekDay.SUNDAY].map((day) => (
+                          <FormField
+                            key={day}
+                            control={form.control}
+                            name="availableDays"
+                            render={({ field }) => {
+                              return (
+                                <FormItem key={day} className="flex flex-row items-start space-x-3 space-y-0">
+                                  <FormControl>
+                                    <Checkbox
+                                      checked={field.value?.includes(day)}
+                                      onCheckedChange={(checked) => {
+                                        const currentValue = field.value || []
+                                        return checked
+                                          ? field.onChange([...currentValue, day])
+                                          : field.onChange(currentValue.filter((value) => value !== day))
+                                      }}
+                                    />
+                                  </FormControl>
+                                  <FormLabel className="font-normal">{dayLabels[day]}</FormLabel>
+                                </FormItem>
+                              )
+                            }}
+                          />
+                        ))}
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-6 col-span-full">
+                <div className="space-y-2">
+                  <FormField
+                    control={form.control}
+                    name="startTime"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Hora de apertura<span className="text-red-500">*</span>
+                        </FormLabel>
+                        <div className="flex space-x-2">
+                          <Select onValueChange={field.onChange} value={originalData?.startTime} defaultValue={originalData?.startTime}>
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Hora" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {Array.from({ length: 12 }, (_, i) => i + 1).map((hour) => (
+                                <SelectItem key={hour} value={hour.toString()}>
+                                  {hour}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormField
+                            control={form.control}
+                            name="pmamStart"
+                            render={({ field }) => (
+                              <FormItem>
+                                <Select onValueChange={field.onChange} value={originalData?.pmamStart} defaultValue={originalData?.pmamStart}>
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="AM/PM" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    <SelectItem value="AM">AM</SelectItem>
+                                    <SelectItem value="PM">PM</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <FormField
+                    control={form.control}
+                    name="endTime"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Hora de cierre<span className="text-red-500">*</span>
+                        </FormLabel>
+                        <div className="flex space-x-2">
+                          <Select onValueChange={field.onChange} value={originalData?.endTime} defaultValue={originalData?.endTime}>
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Hora" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {Array.from({ length: 12 }, (_, i) => i + 1).map((hour) => (
+                                <SelectItem key={hour} value={hour.toString()}>
+                                  {hour}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormField
+                            control={form.control}
+                            name="pmamEnd"
+                            render={({ field }) => (
+                              <FormItem>
+                                <Select onValueChange={field.onChange} value={originalData?.pmamEnd} defaultValue={originalData?.pmamEnd}>
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="AM/PM" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    <SelectItem value="AM">AM</SelectItem>
+                                    <SelectItem value="PM">PM</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -263,5 +510,5 @@ export function ProfileConfiguration() {
         </form>
       </Form>
     </div>
-  );
+  )
 }
