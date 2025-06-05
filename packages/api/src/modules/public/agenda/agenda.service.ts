@@ -19,6 +19,7 @@ export class AgendaService {
                 pmamEnd: true,
                 services: {
                     select: {
+                        id: true,
                         name: true,
                         price: true,
                         duration: true,
