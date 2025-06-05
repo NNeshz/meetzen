@@ -4,6 +4,7 @@ import { WeekDay } from "@meetzen/database";
 export const CompanyService = {
   createBasicInformation: async (body: {
     name: string;
+    nameId: string;
     companyDescription: string;
     image?: File;
     phoneNumber: string;
@@ -24,6 +25,17 @@ export const CompanyService = {
 
   getUserCompany: async () => {
     const response = await apiClient.company.get({
+      fetch: {
+        credentials: "include",
+      },
+    });
+    return response.data;
+  },
+
+  validateNameId: async (body: {
+    nameId: string;
+  }) => {
+    const response = await apiClient.company.validate.get(body, {
       fetch: {
         credentials: "include",
       },

@@ -16,7 +16,7 @@ import {
 } from "@meetzen/ui/src/components/form"
 import { toast } from "sonner"
 
-import { Camera, Loader2 } from "lucide-react"
+import { Camera, Loader2, CheckCircle, XCircle } from "lucide-react"
 import Image from "next/image"
 
 import { useState, useRef, useEffect } from "react"
@@ -30,8 +30,28 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@meetzen/ui/src/components/checkbox"
 import { WeekDay } from "@meetzen/database"
 
+// Hook useDebounce
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [value, delay])
+
+  return debouncedValue
+}
+
 const formSchema = z.object({
   name: z.string().min(2, {
+    message: "El nombre debe tener al menos 2 caracteres.",
+  }),
+  nameId: z.string().min(2, {
     message: "El nombre debe tener al menos 2 caracteres.",
   }),
   companyDescription: z.string().min(20, {
@@ -76,10 +96,26 @@ const dayLabels: Record<WeekDay, string> = {
   [WeekDay.SUNDAY]: "Domingo",
 }
 
+// Función para generar nameId desde el nombre
+function generateNameId(name: string): string {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+}
+
 export function ProfileConfiguration() {
   const { data: company, refetch, isLoading: isLoadingCompany } = useCompany()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [previewImage, setPreviewImage] = useState<string | null>(null)
+  const [isValidatingNameId, setIsValidatingNameId] = useState<boolean>(false)
+  const [nameIdValidation, setNameIdValidation] = useState<{
+    isValid: boolean | null
+    message: string
+  }>({ isValid: null, message: '' })
   const [originalData, setOriginalData] = useState<{
     name: string
     companyDescription: string
@@ -98,6 +134,7 @@ export function ProfileConfiguration() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      nameId: "",
       companyDescription: "",
       phoneNumber: "",
       mapsLocation: "",
@@ -108,6 +145,43 @@ export function ProfileConfiguration() {
       pmamEnd: "PM",
     },
   })
+
+  // Observar el campo name y generar nameId automáticamente
+  const watchedName = form.watch("name")
+  const debouncedName = useDebounce(watchedName, 700)
+
+  // Generar y validar nameId cuando cambie el nombre
+  useEffect(() => {
+    if (debouncedName && debouncedName.length >= 2) {
+      const generatedNameId = generateNameId(debouncedName)
+      form.setValue("nameId", generatedNameId)
+      validateNameIdDebounced(generatedNameId)
+    } else {
+      setNameIdValidation({ isValid: null, message: '' })
+    }
+  }, [debouncedName, form])
+
+  async function validateNameIdDebounced(nameId: string) {
+    if (!nameId || nameId.length < 2) return
+
+    setIsValidatingNameId(true)
+    setNameIdValidation({ isValid: null, message: 'Validando...' })
+    
+    try {
+      await CompanyService.validateNameId({ nameId })
+      setNameIdValidation({ 
+        isValid: true, 
+        message: 'Nombre de empresa disponible' 
+      })
+    } catch (error) {
+      setNameIdValidation({ 
+        isValid: false, 
+        message: 'Este nombre ya está en uso, intenta con otro' 
+      })
+    } finally {
+      setIsValidatingNameId(false)
+    }
+  }
 
   useEffect(() => {
     if (company?.success && company.data) {
@@ -175,10 +249,18 @@ export function ProfileConfiguration() {
 
       // Resetear preview de imagen
       setPreviewImage(originalData.image)
+      // Resetear validación
+      setNameIdValidation({ isValid: null, message: '' })
     }
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    // Verificar que el nameId sea válido antes de enviar
+    if (nameIdValidation.isValid !== true) {
+      toast.error("Debes tener un nombre de empresa válido antes de guardar")
+      return
+    }
+
     setIsLoading(true)
     try {
       await CompanyService.createBasicInformation(values)
@@ -247,6 +329,40 @@ export function ProfileConfiguration() {
                   )}
                 />
               </div>
+
+              {/* Mostrar nameId generado y su validación */}
+              {form.watch("nameId") && (
+                <div className="sm:col-span-4">
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm font-medium text-muted-foreground">ID de la empresa:</span>
+                      <code className="px-2 py-1 bg-muted rounded text-sm font-mono">
+                        {form.watch("nameId")}
+                      </code>
+                      {isValidatingNameId && (
+                        <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+                      )}
+                      {!isValidatingNameId && nameIdValidation.isValid === true && (
+                        <CheckCircle className="w-4 h-4 text-green-500" />
+                      )}
+                      {!isValidatingNameId && nameIdValidation.isValid === false && (
+                        <XCircle className="w-4 h-4 text-red-500" />
+                      )}
+                    </div>
+                    {nameIdValidation.message && (
+                      <p className={`text-xs ${
+                        nameIdValidation.isValid === true 
+                          ? 'text-green-600' 
+                          : nameIdValidation.isValid === false 
+                          ? 'text-red-600' 
+                          : 'text-muted-foreground'
+                      }`}>
+                        {nameIdValidation.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
 
               <div className="col-span-full">
                 <FormField
@@ -503,7 +619,10 @@ export function ProfileConfiguration() {
             <Button type="button" variant="outline" onClick={handleCancel}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button 
+              type="submit" 
+              disabled={isLoading || nameIdValidation.isValid !== true}
+            >
               {isLoading ? "Guardando..." : "Guardar"}
             </Button>
           </div>

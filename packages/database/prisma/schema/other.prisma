@@ -14,10 +14,11 @@ enum WeekDay {
 }
 
 model Company {
-    id String @id @default(cuid())
+    id String @id @default(uuid())
 
     // Información general
     name               String
+    nameId             String
     image              String
     companyDescription String
     availableDays      WeekDay[]
@@ -54,7 +55,7 @@ model Company {
 }
 
 model Employees {
-    id String @id @default(cuid())
+    id String @id @default(uuid())
 
     // Información general
     name        String
@@ -80,9 +81,9 @@ model Employees {
 }
 
 model EmployeeAvailability {
-    id        String   @id @default(cuid())
-    date      DateTime
-    available Boolean  @default(true)
+    id        String  @id @default(uuid())
+    day       WeekDay
+    available Boolean @default(true)
     startTime String?
     endTime   String?
 
@@ -92,12 +93,11 @@ model EmployeeAvailability {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@unique([employeeId, date])
     @@map("employee_availability")
 }
 
 model Services {
-    id String @id @default(cuid())
+    id String @id @default(uuid())
 
     // Información general
     name          String
