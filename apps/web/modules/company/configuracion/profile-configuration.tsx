@@ -405,7 +405,7 @@ export function ProfileConfiguration() {
                           Hora de apertura<span className="text-red-500">*</span>
                         </FormLabel>
                         <div className="flex space-x-2">
-                          <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                          <Select onValueChange={field.onChange} value={originalData?.startTime} defaultValue={originalData?.startTime}>
                             <FormControl>
                               <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Hora" />
@@ -424,7 +424,7 @@ export function ProfileConfiguration() {
                             name="pmamStart"
                             render={({ field }) => (
                               <FormItem>
-                                <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                                <Select onValueChange={field.onChange} value={originalData?.pmamStart} defaultValue={originalData?.pmamStart}>
                                   <FormControl>
                                     <SelectTrigger>
                                       <SelectValue placeholder="AM/PM" />
@@ -456,7 +456,7 @@ export function ProfileConfiguration() {
                           Hora de cierre<span className="text-red-500">*</span>
                         </FormLabel>
                         <div className="flex space-x-2">
-                          <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                          <Select onValueChange={field.onChange} value={originalData?.endTime} defaultValue={originalData?.endTime}>
                             <FormControl>
                               <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Hora" />
@@ -475,7 +475,7 @@ export function ProfileConfiguration() {
                             name="pmamEnd"
                             render={({ field }) => (
                               <FormItem>
-                                <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                                <Select onValueChange={field.onChange} value={originalData?.pmamEnd} defaultValue={originalData?.pmamEnd}>
                                   <FormControl>
                                     <SelectTrigger>
                                       <SelectValue placeholder="AM/PM" />
