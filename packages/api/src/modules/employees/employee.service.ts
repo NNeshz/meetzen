@@ -1,5 +1,4 @@
 import { prisma } from "@meetzen/api/src/modules/prisma";
-import { Temporal } from "temporal-polyfill";
 import { WeekDay } from "@meetzen/database";
 
 export class EmployeeService {
@@ -34,6 +33,7 @@ export class EmployeeService {
         throw new Error("Compañía no encontrada");
       }
 
+      // Crear el empleado
       const employee = await prisma.employees.create({
         data: {
           name: body.name,
@@ -43,40 +43,12 @@ export class EmployeeService {
         },
       });
 
-      const today = Temporal.Now.plainDateISO();
-      const availabilities = [];
-
-      const weekDayNames = Object.values(WeekDay);
-
-      for (let i = 0; i < 7; i++) {
-        const date = today.add({ days: i });
-        const dayIndex = date.dayOfWeek - 1;
-        const currentDayName = weekDayNames[dayIndex];
-
-        if (!currentDayName) {
-          throw new Error("Día no encontrado");
-        }
-
-        if (company.availableDays.includes(currentDayName)) {
-          availabilities.push({
-            date: new Date(date.toString()),
-            available: true,
-            startTime: company.startTime,
-            endTime: company.endTime,
-            employeeId: employee.id,
-          });
-        }
-      }
-
-      if (availabilities.length > 0) {
-        await prisma.employeeAvailability.createMany({
-          data: availabilities,
-        });
-      }
+      // Crear disponibilidad semanal basada en los días de la compañía
+      await this.createWeeklyAvailability(employee.id, company);
 
       return {
         success: true,
-        message: "Empleado creado exitosamente con disponibilidad inicial",
+        message: "Empleado creado exitosamente con disponibilidad semanal",
         data: employee,
       };
     } catch (error) {
@@ -85,6 +57,51 @@ export class EmployeeService {
         error instanceof Error ? error.message : "Error al crear el empleado"
       );
     }
+  }
+
+  private async createWeeklyAvailability(
+    employeeId: string, 
+    company: { availableDays: WeekDay[], startTime: string, endTime: string }
+  ): Promise<void> {
+    type AvailabilityData = {
+      day: WeekDay;
+      available: boolean;
+      startTime: string | null;
+      endTime: string | null;
+      employeeId: string;
+    };
+
+    const availabilities: AvailabilityData[] = [];
+    
+    // Todos los días de la semana
+    const allWeekDays: WeekDay[] = [
+      WeekDay.MONDAY,
+      WeekDay.TUESDAY,
+      WeekDay.WEDNESDAY,
+      WeekDay.THURSDAY,
+      WeekDay.FRIDAY,
+      WeekDay.SATURDAY,
+      WeekDay.SUNDAY
+    ];
+
+    // Crear disponibilidad para cada día de la semana
+    allWeekDays.forEach((weekDay: WeekDay) => {
+      const isAvailable: boolean = company.availableDays.includes(weekDay);
+
+      availabilities.push({
+        day: weekDay,
+        available: isAvailable,
+        startTime: isAvailable ? company.startTime : null,
+        endTime: isAvailable ? company.endTime : null,
+        employeeId: employeeId,
+      });
+    });
+
+    // Insertar todas las disponibilidades (7 registros)
+    await prisma.employeeAvailability.createMany({
+      data: availabilities,
+      skipDuplicates: true,
+    });
   }
 
   async getEmployee(userId: string) {
@@ -98,8 +115,11 @@ export class EmployeeService {
         throw new Error("El usuario no tiene una compañía asignada");
       }
 
-      const employee = await prisma.employees.findMany({
-        where: { companyId: user.companyId },
+      const employees = await prisma.employees.findMany({
+        where: { 
+          companyId: user.companyId,
+          isDeleted: false // Excluir empleados eliminados
+        },
         select: {
           id: true,
           name: true,
@@ -112,10 +132,13 @@ export class EmployeeService {
           availability: {
             select: {
               id: true,
-              date: true,
+              day: true,
               available: true,
               startTime: true,
               endTime: true,
+            },
+            orderBy: {
+              day: 'asc'
             }
           }
         }
@@ -123,13 +146,13 @@ export class EmployeeService {
 
       return {
         success: true,
-        message: "Empleado obtenido exitosamente",
-        data: employee,
+        message: "Empleados obtenidos exitosamente",
+        data: employees,
       };
     } catch (error) {
       console.error(error);
       throw new Error(
-        error instanceof Error ? error.message : "Error al obtener el empleado"
+        error instanceof Error ? error.message : "Error al obtener los empleados"
       );
     }
   }

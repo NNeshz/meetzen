@@ -12,6 +12,7 @@ export class CompanyService {
   async createCompany(
     body: {
       name: string;
+      nameId: string;
       image?: File;
       companyDescription: string;
       availableDays: WeekDay[];
@@ -65,6 +66,7 @@ export class CompanyService {
         const company = await tx.company.create({
           data: {
             name: body.name,
+            nameId: body.nameId,
             image: imageUrl,
             companyDescription: body.companyDescription,
             availableDays: body.availableDays,
@@ -249,6 +251,45 @@ export class CompanyService {
         error instanceof Error
           ? error.message
           : "Error al actualizar la compañía"
+      );
+    }
+  }
+
+  async validateNameId(userId: string, nameId: string) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { companyId: true },
+      });
+
+      if (!user) {
+        throw new Error("Usuario no encontrado");
+      }
+
+      if (!user.companyId) {
+        throw new Error("Usuario no tiene una compañía asignada");
+      }
+
+      const company = await prisma.company.findUnique({
+        where: { id: user.companyId },
+        select: {
+          nameId: true,
+        },
+      });
+
+      if (company) {
+        throw new Error("El nombre de la compañía ya está en uso");
+      }
+
+      return {
+        success: true,
+        message: "Nombre de la compañía validado exitosamente",
+        isAvailable: true,
+      };
+    } catch (error) {
+      console.log(error);
+      throw new Error(
+        error instanceof Error ? error.message : "Error al validar el nombre de la compañía"
       );
     }
   }

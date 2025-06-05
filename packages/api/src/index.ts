@@ -6,6 +6,7 @@ import { betterAuthPlugin } from "@meetzen/api/src/utils/better-auth-plugin";
 import { companyRouter } from "@meetzen/api/src/modules/company/company.route";
 import { serviceRouter } from "@meetzen/api/src/modules/services/services.route";
 import { employeeRouter } from "@meetzen/api/src/modules/employees/employee.route";
+import { publicRoute } from "@meetzen/api/src/modules/public/public.route";
 
 export const api = new Elysia({
   prefix: "/api",
@@ -20,5 +21,6 @@ export const api = new Elysia({
 .use(companyRouter)
 .use(serviceRouter)
 .use(employeeRouter)
+.use(publicRoute)
   
 export type Api = typeof api;

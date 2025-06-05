@@ -14,6 +14,7 @@ export const companyRouter = new Elysia({
     company: true,
     body: t.Object({
         name: t.String(),
+        nameId: t.String(),
         image: t.Optional(t.File({
             format: "image/*",
         })),
@@ -29,4 +30,10 @@ export const companyRouter = new Elysia({
 })
 .get("/", ({ companyService, user }) => companyService.getUserCompany(user.id), {
     company: true,
+})
+.get("/validate", ({ companyService, user, body }) => companyService.validateNameId(user.id, body.nameId), {
+    company: true,
+    body: t.Object({
+        nameId: t.String(),
+    })
 })
