@@ -6,6 +6,25 @@ export class AgendaService {
             where: {
                 nameId: companyNameId
             },
+            select: {
+                name: true,
+                image: true,
+                companyDescription: true,
+                availableDays: true,
+                phoneNumber: true,
+                mapsLocation: true,
+                startTime: true,
+                endTime: true,
+                pmamStart: true,
+                pmamEnd: true,
+                services: {
+                    select: {
+                        name: true,
+                        price: true,
+                        duration: true,
+                    }
+                },
+            }
         });
 
         if (!company) {
