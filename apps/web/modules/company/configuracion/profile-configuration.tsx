@@ -28,6 +28,7 @@ import { useCompany } from "@/modules/company/configuracion/hooks/useCompany"
 import { CompanyService } from "@/modules/company/configuracion/services/company-service"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@meetzen/ui/src/components/select"
 import { Checkbox } from "@meetzen/ui/src/components/checkbox"
+import { WeekDay } from "@meetzen/database"
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -47,7 +48,7 @@ const formSchema = z.object({
   mapsLocation: z.string().min(2, {
     message: "La ubicación es requerida.",
   }),
-  availableDays: z.array(z.string()).min(1, {
+  availableDays: z.array(z.enum(["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]),).min(1, {
     message: "Selecciona al menos un día disponible.",
   }),
   startTime: z.string().min(1, {
@@ -64,6 +65,17 @@ const formSchema = z.object({
   }),
 })
 
+// Mapeo de días en inglés a español
+const dayLabels: Record<WeekDay, string> = {
+  [WeekDay.MONDAY]: "Lunes",
+  [WeekDay.TUESDAY]: "Martes", 
+  [WeekDay.WEDNESDAY]: "Miércoles",
+  [WeekDay.THURSDAY]: "Jueves",
+  [WeekDay.FRIDAY]: "Viernes",
+  [WeekDay.SATURDAY]: "Sábado",
+  [WeekDay.SUNDAY]: "Domingo",
+}
+
 export function ProfileConfiguration() {
   const { data: company, refetch, isLoading: isLoadingCompany } = useCompany()
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -74,7 +86,7 @@ export function ProfileConfiguration() {
     image: string | null
     phoneNumber: string
     mapsLocation: string
-    availableDays: string[]
+    availableDays: WeekDay[]
     startTime: string
     endTime: string
     pmamStart: string
@@ -131,8 +143,6 @@ export function ProfileConfiguration() {
       }
     }
   }, [company, form])
-
-  console.log(company)
 
   function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
@@ -352,7 +362,7 @@ export function ProfileConfiguration() {
                         <FormDescription>Selecciona los días en que tu empresa está abierta.</FormDescription>
                       </div>
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                        {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"].map((day) => (
+                        {[WeekDay.MONDAY, WeekDay.TUESDAY, WeekDay.WEDNESDAY, WeekDay.THURSDAY, WeekDay.FRIDAY, WeekDay.SATURDAY, WeekDay.SUNDAY].map((day) => (
                           <FormField
                             key={day}
                             control={form.control}
@@ -371,7 +381,7 @@ export function ProfileConfiguration() {
                                       }}
                                     />
                                   </FormControl>
-                                  <FormLabel className="font-normal">{day}</FormLabel>
+                                  <FormLabel className="font-normal">{dayLabels[day]}</FormLabel>
                                 </FormItem>
                               )
                             }}
@@ -395,7 +405,7 @@ export function ProfileConfiguration() {
                           Hora de apertura<span className="text-red-500">*</span>
                         </FormLabel>
                         <div className="flex space-x-2">
-                          <Select onValueChange={field.onChange} value={field.value}>
+                          <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Hora" />
@@ -414,7 +424,7 @@ export function ProfileConfiguration() {
                             name="pmamStart"
                             render={({ field }) => (
                               <FormItem>
-                                <Select onValueChange={field.onChange} value={field.value}>
+                                <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                                   <FormControl>
                                     <SelectTrigger>
                                       <SelectValue placeholder="AM/PM" />
@@ -446,7 +456,7 @@ export function ProfileConfiguration() {
                           Hora de cierre<span className="text-red-500">*</span>
                         </FormLabel>
                         <div className="flex space-x-2">
-                          <Select onValueChange={field.onChange} value={field.value}>
+                          <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Hora" />
@@ -465,7 +475,7 @@ export function ProfileConfiguration() {
                             name="pmamEnd"
                             render={({ field }) => (
                               <FormItem>
-                                <Select onValueChange={field.onChange} value={field.value}>
+                                <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                                   <FormControl>
                                     <SelectTrigger>
                                       <SelectValue placeholder="AM/PM" />

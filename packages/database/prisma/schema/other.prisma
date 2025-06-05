@@ -3,6 +3,16 @@ enum EmployeeStatus {
     INACTIVE
 }
 
+enum WeekDay {
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+    SUNDAY
+}
+
 model Company {
     id String @id @default(cuid())
 
@@ -10,7 +20,7 @@ model Company {
     name               String
     image              String
     companyDescription String
-    availableDays      String[]
+    availableDays      WeekDay[]
     phoneNumber        String
     mapsLocation       String
     startTime          String

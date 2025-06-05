@@ -1,5 +1,6 @@
 import { prisma } from "@meetzen/api/src/modules/prisma";
 import { ImageService } from "@meetzen/api/src/modules/s3";
+import { WeekDay } from "@meetzen/database";
 
 export class CompanyService {
   private imageService: ImageService;
@@ -13,7 +14,7 @@ export class CompanyService {
       name: string;
       image?: File;
       companyDescription: string;
-      availableDays: string[];
+      availableDays: WeekDay[];
       phoneNumber: string;
       mapsLocation: string;
       startTime: string;

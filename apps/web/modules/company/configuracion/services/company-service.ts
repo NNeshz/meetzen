@@ -1,4 +1,5 @@
 import { apiClient } from "@/utils/api-connection";
+import { WeekDay } from "@meetzen/database";
 
 export const CompanyService = {
   createBasicInformation: async (body: {
@@ -7,7 +8,7 @@ export const CompanyService = {
     image?: File;
     phoneNumber: string;
     mapsLocation: string;
-    availableDays: string[];
+    availableDays: WeekDay[];
     startTime: string;
     endTime: string;
     pmamStart: string;

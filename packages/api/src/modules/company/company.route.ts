@@ -1,6 +1,8 @@
-import { betterAuthPlugin } from "@meetzen/api/src/utils/better-auth-plugin";
 import Elysia, {t }  from "elysia";
+
+import { betterAuthPlugin } from "@meetzen/api/src/utils/better-auth-plugin";
 import { companyModule } from "@meetzen/api/src/modules/company/company.module";
+import { WeekDay } from "@meetzen/database";
 
 export const companyRouter = new Elysia({
     prefix: "/company",
@@ -16,7 +18,7 @@ export const companyRouter = new Elysia({
             format: "image/*",
         })),
         companyDescription: t.String(),
-        availableDays: t.Array(t.String()),
+        availableDays: t.Array(t.Enum(WeekDay)),
         phoneNumber: t.String(),
         mapsLocation: t.String(),
         startTime: t.String(),

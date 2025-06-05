@@ -1,5 +1,6 @@
 import { prisma } from "@meetzen/api/src/modules/prisma";
 import { Temporal } from "temporal-polyfill";
+import { WeekDay } from "@meetzen/database";
 
 export class EmployeeService {
   async createEmployee(
@@ -45,9 +46,7 @@ export class EmployeeService {
       const today = Temporal.Now.plainDateISO();
       const availabilities = [];
 
-      const weekDayNames = [
-        "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"
-      ];
+      const weekDayNames = Object.values(WeekDay);
 
       for (let i = 0; i < 7; i++) {
         const date = today.add({ days: i });
