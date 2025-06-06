@@ -66,11 +66,12 @@ export default function Page() {
     <div className="px-8 mt-24 sm:mt-28">
       <AgendaHeader company={company} />
       {company.services.length > 0 ? (
-        <div className="mt-8 flex flex-col gap-6">
+        <div className="mt-8 flex flex-col gap-6 max-w-4xl mx-auto">
           {company.services.map((service) => (
             <Card
               key={service.id}
-              className="w-full overflow-hidden border-0 shadow-lg "
+              className="bg-gradient-to-t from-primary/5 to-card dark:bg-card shadow-xs"
+      data-slot="card"
             >
               <CardContent className="p-0">
                 {/* Vista Desktop */}
@@ -82,18 +83,16 @@ export default function Page() {
                           <h3 className="text-2xl font-bold text-white">
                             {service.name}
                           </h3>
-                          <Badge
-                            variant="outline"
-                            className="text-xs font-semibold text-black border-1 border-white bg-gray-400"
-                          >
+                          <Badge>
                             {service.serviceCategory?.name || "Sin categoría"}
                           </Badge>
                         </div>
                        
                         <div className="flex items-center gap-2 text-sm text-gray-400">
+                          Duracion:
                           <Clock className="w-4 h-4" />
                           <span className="font-medium">
-                            {service.duration}
+                            {service.duration} min
                           </span>
                         </div>
                       </div>
@@ -104,7 +103,6 @@ export default function Page() {
                       <p className="text-3xl font-bold text-green-500">
                         $ {service.price}
                       </p>
-                      <p className="text-sm text-gray-400">por sesión</p>
                     </div>
                     <Button className="px-8 py-3 text-base font-medium bg-white hover:bg-gray-100 text-black">
                       <Calendar className="w-5 h-5 mr-2" />
@@ -120,23 +118,23 @@ export default function Page() {
                       <h3 className="text-xl font-bold text-white leading-tight flex-1">
                         {service.name}
                       </h3>
-                      <Badge className="text-xs font-semibold text-black border-1 border-white bg-gray-400 shrink-0">
+                      <Badge>
                         {service.serviceCategory?.name || "Sin categoría"}
                       </Badge>
                     </div>
                     
                     <div className="flex items-center gap-2 text-sm text-gray-400">
+                      Duracion:
                       <Clock className="w-4 h-4" />
-                      <span className="font-medium">{service.duration}</span>
+                      <span className="font-medium">{service.duration} min</span>
                     </div>
                   </div>
 
-                  <div className="p-6 flex items-center justify-between border-t border-gray-800">
+                  <div className="p-6 flex items-center justify-between border-t">
                     <div>
                       <p className="text-2xl font-bold text-green-500">
                         $ {service.price}
                       </p>
-                      <p className="text-sm text-gray-400">por sesión</p>
                     </div>
                     <Button className="bg-white hover:bg-gray-100 text-black px-6 py-2.5 font-medium">
                       <Calendar className="w-4 h-4 mr-2" />
