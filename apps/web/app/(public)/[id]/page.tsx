@@ -8,7 +8,15 @@ import { AgendaHeader } from "@/modules/agenda/agenda-header";
 
 import { Card, CardContent } from "@meetzen/ui/src/components/card";
 import { Badge } from "@meetzen/ui/src/components/badge";
-import { Clock, Calendar } from "lucide-react";
+import { Input } from "@meetzen/ui/src/components/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@meetzen/ui/src/components/select";
+import { Clock, Calendar, Search } from "lucide-react";
 
 const LoadingState = () => (
   <div className="flex flex-col items-center justify-center py-12">
@@ -65,13 +73,34 @@ export default function Page() {
   return (
     <div className="px-8 mt-24 sm:mt-28">
       <AgendaHeader company={company} />
+      {/* Filtros */}
+      <div className="flex flex-col sm:flex-row gap-4 max-w-4xl mx-auto mt-8">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <Input
+            placeholder="Buscar por nombre del servicio..."
+            className="pl-10"
+          />
+        </div>
+        <Select>
+          <SelectTrigger className="w-full sm:w-[180px]">
+            <SelectValue placeholder="Categoría" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todas las categorías</SelectItem>
+            <SelectItem value="1">Categoría 1</SelectItem>
+            <SelectItem value="2">Categoría 2</SelectItem>
+            <SelectItem value="3">Categoría 3</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
       {company.services.length > 0 ? (
         <div className="mt-8 flex flex-col gap-6 max-w-4xl mx-auto">
           {company.services.map((service) => (
             <Card
               key={service.id}
               className="bg-gradient-to-t from-primary/5 to-card dark:bg-card shadow-xs"
-      data-slot="card"
+              data-slot="card"
             >
               <CardContent className="p-0">
                 {/* Vista Desktop */}
@@ -87,7 +116,7 @@ export default function Page() {
                             {service.serviceCategory?.name || "Sin categoría"}
                           </Badge>
                         </div>
-                       
+
                         <div className="flex items-center gap-2 text-sm text-gray-400">
                           Duracion:
                           <Clock className="w-4 h-4" />
@@ -122,11 +151,13 @@ export default function Page() {
                         {service.serviceCategory?.name || "Sin categoría"}
                       </Badge>
                     </div>
-                    
+
                     <div className="flex items-center gap-2 text-sm text-gray-400">
                       Duracion:
                       <Clock className="w-4 h-4" />
-                      <span className="font-medium">{service.duration} min</span>
+                      <span className="font-medium">
+                        {service.duration} min
+                      </span>
                     </div>
                   </div>
 
@@ -154,7 +185,6 @@ export default function Page() {
           <h4 className="text-lg font-semibold text-foreground mb-2">
             No se encontraron servicios
           </h4>
-          
         </div>
       )}
     </div>

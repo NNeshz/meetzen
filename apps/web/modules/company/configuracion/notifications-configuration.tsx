@@ -1,13 +1,9 @@
 import { Button } from "@meetzen/ui/src/components/button";
 import { Input } from "@meetzen/ui/src/components/input";
 import { Label } from "@meetzen/ui/src/components/label";
-import {
-  Facebook,
-  Instagram,
-} from "lucide-react";
+import { Facebook, Instagram } from "lucide-react";
 
 import { FaTiktok } from "react-icons/fa6";
-
 
 export function NotificationsConfiguration() {
   return (
@@ -81,13 +77,6 @@ export function NotificationsConfiguration() {
                 />
               </div>
             </div>
-
-           
-
-          
-
-
-            
           </div>
         </div>
         <div className="flex items-center justify-end gap-x-2 border-t border-gray-900/10 px-4 py-4 sm:px-8">
