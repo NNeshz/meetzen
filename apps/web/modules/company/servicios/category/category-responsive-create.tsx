@@ -20,32 +20,31 @@ import {
   DrawerTrigger,
 } from "@meetzen/ui/src/components/drawer";
 import { Button } from "@meetzen/ui/src/components/button";
-import { Blocks, CirclePlus } from "lucide-react";
+import { CirclePlus } from "lucide-react";
 
-import { ServicioCreateForm } from "@/modules/company/servicios/servicio-create-form"
+import { CategoryCreateForm } from "@/modules/company/servicios/category/category-create-form"
 import { useIsMobile } from "@meetzen/ui/src/hooks/use-mobile";
 
 
-export function ServicioResponsiveCreate() {
+export function CategoryResponsiveCreate() {
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(false);
 
   const DesktopDialog = () => (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <Blocks />
-          Crear servicio
+        <Button size="icon">
+          <CirclePlus />
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Crear un nuevo servicio</DialogTitle>
+          <DialogTitle>Crear una nueva categoria</DialogTitle>
           <DialogDescription>
-            Rellena el formulario para crear un nuevo servicio.
+            Rellena el formulario para crear una nueva categoria.
           </DialogDescription>
         </DialogHeader>
-        <ServicioCreateForm />
+        <CategoryCreateForm />
       </DialogContent>
     </Dialog>
   );
@@ -53,20 +52,19 @@ export function ServicioResponsiveCreate() {
   const MobileDrawer = () => (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger asChild>
-        <Button>
-          <Blocks />
-          Crear servicio
+        <Button size="icon">
+          <CirclePlus />
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Crear nuevo servicio</DrawerTitle>
+          <DrawerTitle>Crear nueva categoria</DrawerTitle>
           <DrawerDescription>
-            Rellena el formulario para crear un nuevo servicio.
+            Rellena el formulario para crear una nueva categoria.
           </DrawerDescription>
           </DrawerHeader>
           <div className="px-4">
-            <ServicioCreateForm />
+            <CategoryCreateForm />
           </div>
         <DrawerFooter>
           <Button

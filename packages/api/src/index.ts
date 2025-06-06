@@ -7,6 +7,7 @@ import { companyRouter } from "@meetzen/api/src/modules/company/company.route";
 import { serviceRouter } from "@meetzen/api/src/modules/services/services.route";
 import { employeeRouter } from "@meetzen/api/src/modules/employees/employee.route";
 import { publicRoute } from "@meetzen/api/src/modules/public/public.route";
+import { serviceCategoryRouter } from "@meetzen/api/src/modules/services-category/service-category.route";
 
 export const api = new Elysia({
   prefix: "/api",
@@ -22,5 +23,6 @@ export const api = new Elysia({
 .use(serviceRouter)
 .use(employeeRouter)
 .use(publicRoute)
+.use(serviceCategoryRouter)
   
 export type Api = typeof api;
