@@ -86,6 +86,8 @@ model EmployeeAvailability {
     available Boolean @default(true)
     startTime String?
     endTime   String?
+    ampmStart String?
+    ampmEnd   String?
 
     employee   Employees @relation(fields: [employeeId], references: [id])
     employeeId String

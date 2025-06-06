@@ -22,6 +22,21 @@ export const EmpleadosService = {
             },
         });
         return response.data;
+    },
+
+    async updateEmployee(id: string, employee: {
+        name: string;
+        phoneNumber: string;
+        address: string;
+    }) {
+        const response = await apiClient.employee({
+            id,
+        }).patch(employee, {
+            fetch: {
+                credentials: "include",
+            },
+        });
+        return response.data;
     }
 }
     

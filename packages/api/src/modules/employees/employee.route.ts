@@ -19,3 +19,14 @@ export const employeeRouter = new Elysia({
 .get("/", ({ employeeService, user }) => employeeService.getEmployee(user.id), {
     company: true,
 })
+.patch("/:id", ({ employeeService, user, body, params }) => employeeService.updateEmployee(user.id, body, params.id), {
+    company: true,
+    body: t.Object({
+        name: t.String(),
+        phoneNumber: t.String(),
+        address: t.String(),
+    }),
+    params: t.Object({
+        id: t.String(),
+    })
+})

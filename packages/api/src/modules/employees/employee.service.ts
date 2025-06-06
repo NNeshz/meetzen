@@ -26,6 +26,8 @@ export class EmployeeService {
           availableDays: true,
           startTime: true,
           endTime: true,
+          pmamStart: true,
+          pmamEnd: true,
         },
       });
 
@@ -59,15 +61,60 @@ export class EmployeeService {
     }
   }
 
+  async updateEmployee(
+    userId: string,
+    body: {
+      name: string;
+      phoneNumber: string;
+      address: string;
+    },
+    employeeId: string,
+  ) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { companyId: true },
+      });
+
+      if (!user?.companyId) {
+        throw new Error("El usuario no tiene una compañía asignada");
+      }
+
+      const employee = await prisma.employees.update({
+        where: { id: employeeId, companyId: user.companyId },
+        data: body,
+      });
+      
+      return {
+        success: true,
+        message: "Empleado actualizado exitosamente",
+        data: employee,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new Error(
+        error instanceof Error ? error.message : "Error al actualizar el empleado"
+      );
+    }
+  }
+
   private async createWeeklyAvailability(
     employeeId: string, 
-    company: { availableDays: WeekDay[], startTime: string, endTime: string }
+    company: { 
+      availableDays: WeekDay[], 
+      startTime: string, 
+      endTime: string, 
+      pmamStart: string, 
+      pmamEnd: string    
+    }
   ): Promise<void> {
     type AvailabilityData = {
       day: WeekDay;
       available: boolean;
       startTime: string | null;
       endTime: string | null;
+      ampmStart: string | null;
+      ampmEnd: string | null;
       employeeId: string;
     };
 
@@ -93,6 +140,8 @@ export class EmployeeService {
         available: isAvailable,
         startTime: isAvailable ? company.startTime : null,
         endTime: isAvailable ? company.endTime : null,
+        ampmStart: isAvailable ? company.pmamStart : null,
+        ampmEnd: isAvailable ? company.pmamEnd : null,
         employeeId: employeeId,
       });
     });
@@ -136,6 +185,8 @@ export class EmployeeService {
               available: true,
               startTime: true,
               endTime: true,
+              ampmStart: true,
+              ampmEnd: true,
             },
             orderBy: {
               day: 'asc'

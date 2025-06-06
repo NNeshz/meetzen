@@ -23,18 +23,12 @@ import { Button } from "@meetzen/ui/src/components/button";
 import { IconUserPlus } from "@tabler/icons-react";
 
 import { EmpleadosCreateForm } from "@/modules/company/empleados/empleados-create-form";
+import { useIsMobile } from "@meetzen/ui/src/hooks/use-mobile";
 
 
 export function EmployeeResponsiveCreate() {
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile()
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  });
 
   const DesktopDialog = () => (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
