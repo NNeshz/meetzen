@@ -207,7 +207,7 @@ const ServiceCard = ({ service }: { service: Service }) => (
               </div>
               <div className="flex items-center gap-1 text-sm font-medium text-green-600">
                 <DollarSign className="h-3 w-3" />
-                <span>${service.price}</span>
+                <span>{service.price}</span>
               </div>
             </div>
           </div>
