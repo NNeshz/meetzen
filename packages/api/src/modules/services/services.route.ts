@@ -8,7 +8,7 @@ export const serviceRouter = new Elysia({
 })
 .use(betterAuthPlugin)
 .use(serviceModule)
-.get("/", ({ serviceService, user }) => serviceService.getAllServices(user.id), {
+.get("/:category", ({ serviceService, user, params }) => serviceService.getAllServices(user.id), {
     company: true,
 })
 .post("/", ({ serviceService, body, user }) => serviceService.createService(body, user.id), {
@@ -17,6 +17,7 @@ export const serviceRouter = new Elysia({
         name: t.String(),
         duration: t.Number(),
         price: t.Number(),
+        categoryId: t.Optional(t.String()),
     })
 })
 .patch("/:id", ({ serviceService, body, user, params }) => serviceService.updateService(body, user.id, params.id), {
@@ -25,6 +26,7 @@ export const serviceRouter = new Elysia({
         name: t.String(),
         duration: t.Number(),
         price: t.Number(),
+        categoryId: t.Optional(t.String()),
     })
 })
 .delete("/:id", ({ serviceService, user, params }) => serviceService.deleteService(user.id, params.id), {

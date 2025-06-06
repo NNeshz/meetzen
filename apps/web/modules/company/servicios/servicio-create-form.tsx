@@ -19,6 +19,8 @@ import { toast } from "sonner";
 
 import { ServiciosService } from "@/modules/company/servicios/services/servicios-service";
 import { useServicios } from "@/modules/company/servicios/hooks/useServicios";
+import { useCategories } from "@/modules/company/servicios/category/hooks/useCategory";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@meetzen/ui/src/components/select";
 
 const schema = z.object({
   name: z.string().min(2, {
@@ -30,10 +32,12 @@ const schema = z.object({
   duration: z.coerce.number().min(1, {
     message: "La duración debe ser mayor a 0.",
   }),
+  categoryId: z.string().optional()
 });
 
 export function ServicioCreateForm() {
   const { refetch } = useServicios();
+  const { data: categories } = useCategories();
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -41,6 +45,7 @@ export function ServicioCreateForm() {
       name: "",
       price: 0,
       duration: 0,
+      categoryId: "",
     },
   });
 
@@ -50,12 +55,12 @@ export function ServicioCreateForm() {
       await ServiciosService.createService(values);
       await refetch();
       await form.reset();
-      toast("El servicio fue creado", {
+      toast.success("El servicio fue creado", {
         description: "Ahora puedes verlo en la tabla de servicios",
         duration: 3000,
       });
     } catch (error) {
-      toast("Hubo un error al crear el servicio", {
+      toast.error("Hubo un error al crear el servicio", {
         description: "Intentalo de nuevo más tarde",
         duration: 3000,
       });
@@ -121,6 +126,35 @@ export function ServicioCreateForm() {
                   </FormLabel>
                   <FormControl>
                     <Input placeholder="Duración" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="categoryId"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Categoria
+                    <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Selecciona una categoria" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories?.data?.map((category) => (
+                          <SelectItem key={category.id} value={category.id}>
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -6,6 +6,7 @@ export class ServiceService {
       name: string;
       duration: number;
       price: number;
+      categoryId?: string;
     },
     userId: string
   ) {
@@ -29,6 +30,7 @@ export class ServiceService {
           duration: body.duration,
           price: body.price,
           companyId: user.companyId,
+          serviceCategoryId: body.categoryId ,
         },
       });
       return {
@@ -68,6 +70,12 @@ export class ServiceService {
           price: true,
           lastUse: true,
           createdAt: true,
+          serviceCategory: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
         },
       });
 
@@ -95,6 +103,7 @@ export class ServiceService {
       name: string;
       duration: number;
       price: number;
+      categoryId?: string;
     },
     userId: string,
     serviceId: string
@@ -119,6 +128,7 @@ export class ServiceService {
           name: body.name,
           duration: body.duration,
           price: body.price,
+          serviceCategoryId: body.categoryId,
         },
       });
       return {

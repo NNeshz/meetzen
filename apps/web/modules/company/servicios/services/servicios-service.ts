@@ -5,6 +5,7 @@ export const ServiciosService = {
     name: string;
     duration: number;
     price: number;
+    categoryId?: string;
   }) => {
     const response = await apiClient.service.post(body, {
       fetch: {
@@ -29,6 +30,7 @@ export const ServiciosService = {
       name: string;
       duration: number;
       price: number;
+      categoryId?: string;
     }
   ) => {
     const response = await apiClient
