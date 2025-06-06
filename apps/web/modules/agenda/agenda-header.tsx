@@ -1,8 +1,7 @@
 import { WeekDay } from "@meetzen/database";
 import { Avatar, AvatarFallback, AvatarImage } from "@meetzen/ui/src/components/avatar";
-import Link from "next/link";
 import { MapPin } from "lucide-react";
-
+import Link from "next/link";
 
 interface Company {
   name: string;
