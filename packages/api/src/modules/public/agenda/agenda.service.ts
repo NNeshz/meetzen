@@ -23,6 +23,12 @@ export class AgendaService {
                         name: true,
                         price: true,
                         duration: true,
+                        serviceCategory: {
+                            select: {
+                                id: true,
+                                name: true,
+                            }
+                        }
                     }
                 },
             }
