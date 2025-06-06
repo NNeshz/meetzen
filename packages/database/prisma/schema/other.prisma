@@ -42,9 +42,10 @@ model Company {
     deletedBy String? // ID del usuario que eliminó el registro
 
     // Relaciones
-    employees Employees[]
-    services  Services[]
-    users     User[]
+    employees         Employees[]
+    services          Services[]
+    users             User[]
+    serviceCategories ServiceCategory[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -98,6 +99,28 @@ model EmployeeAvailability {
     @@map("employee_availability")
 }
 
+model ServiceCategory {
+    id   String @id @default(uuid())
+    name String
+
+    // Borrado lógico
+    isDeleted Boolean   @default(false)
+    deletedAt DateTime?
+    deletedBy String? // ID del usuario que eliminó el registro
+
+    // Relaciones
+    company   Company    @relation(fields: [companyId], references: [id])
+    companyId String
+    services  Services[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Nombre único por empresa (no globalmente)
+    @@unique([name, companyId])
+    @@map("service_category")
+}
+
 model Services {
     id String @id @default(uuid())
 
@@ -114,12 +137,15 @@ model Services {
     deletedBy String? // ID del usuario que eliminó el registro
 
     // Relaciones
-    company   Company @relation(fields: [companyId], references: [id])
-    companyId String
+    company           Company          @relation(fields: [companyId], references: [id])
+    companyId         String
+    serviceCategory   ServiceCategory? @relation(fields: [serviceCategoryId], references: [id])
+    serviceCategoryId String?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@unique([name])
+    // Nombre único por empresa
+    @@unique([name, companyId])
     @@map("services")
 }
