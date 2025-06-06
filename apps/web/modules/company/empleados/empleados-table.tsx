@@ -53,12 +53,15 @@ import {
 import { EmpleadosFilters } from "@/modules/company/empleados/empleados-filters";
 import { useEmpleados } from "@/modules/company/empleados/hooks/useEmpleados";
 import { formatDate } from "@/utils/format-date";
+import { WeekDay, EmployeeStatus } from "@meetzen/database";
+import { EmpleadosResponsiveHoraryUpdate } from "@/modules/company/empleados/empleados-responsive-horary-update";
+import { EmpleadosResponsiveUpdate } from "@/modules/company/empleados/empleados-responsive-update";
 
-interface Employee {
+export interface Employee {
   id: string;
   name: string;
   phoneNumber: string;
-  status: string;
+  status: EmployeeStatus;
   companyId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -68,17 +71,19 @@ interface Employee {
 
 interface Availability {
   id: string;
-  date: Date;
+  day: WeekDay;
   available: boolean;
   startTime: string | null;
   endTime: string | null;
+  ampmStart: string | null;
+  ampmEnd: string | null;
 }
 
 const getStatusBadgeVariant = (status: Employee["status"]) => {
   switch (status) {
-    case "ACTIVE":
+    case EmployeeStatus.ACTIVE:
       return "default";
-    case "INACTIVE":
+    case EmployeeStatus.INACTIVE:
       return "outline";
     default:
       return "secondary";
@@ -171,10 +176,8 @@ const EmployeeTableRow = ({ employee }: { employee: Employee }) => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>
-              <Edit className="h-4 w-4" />
-              Editar
-            </DropdownMenuItem>
+            <EmpleadosResponsiveHoraryUpdate employee={employee} />
+            <EmpleadosResponsiveUpdate employee={employee} />
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
@@ -243,6 +246,7 @@ const EmployeeCard = ({ employee }: { employee: Employee }) => (
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <EmpleadosResponsiveHoraryUpdate employee={employee} />
             <DropdownMenuItem>
               <Edit className="h-4 w-4" />
               Editar
