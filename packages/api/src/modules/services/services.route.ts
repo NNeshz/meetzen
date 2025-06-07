@@ -8,7 +8,7 @@ export const serviceRouter = new Elysia({
 })
 .use(betterAuthPlugin)
 .use(serviceModule)
-.get("/:category", ({ serviceService, user, params }) => serviceService.getAllServices(user.id), {
+.get("/", ({ serviceService, user }) => serviceService.getAllServices(user.id), {
     company: true,
 })
 .post("/", ({ serviceService, body, user }) => serviceService.createService(body, user.id), {

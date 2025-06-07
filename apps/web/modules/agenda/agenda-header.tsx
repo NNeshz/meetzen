@@ -1,4 +1,10 @@
+<<<<<<< HEAD
+"use client";
+
+import { useAgenda } from "@/modules/agenda/hooks/useAgenda";
+=======
 import { WeekDay } from "@meetzen/database";
+>>>>>>> origin
 import {
   Avatar,
   AvatarFallback,
@@ -6,19 +12,9 @@ import {
 } from "@meetzen/ui/src/components/avatar";
 import { MapPin } from "lucide-react";
 import Link from "next/link";
-
-interface Company {
-  name: string;
-  companyDescription: string;
-  image: string | null;
-  phoneNumber: string;
-  mapsLocation: string;
-  availableDays: WeekDay[];
-  startTime: string;
-  endTime: string;
-  pmamStart: string;
-  pmamEnd: string;
-}
+import { useParams } from "next/navigation";
+import { Loader, AlertCircle, RefreshCw, Blocks } from "lucide-react";
+import { Button } from "@meetzen/ui/src/components/button";
 
 const formatAvailableDays = (days: string[]) => {
   const dayTranslations: { [key: string]: string } = {
@@ -52,7 +48,62 @@ const formatTime = (hour: string, period: string) => {
   return `${hour}:00 ${period}`;
 };
 
-export function AgendaHeader({ company }: { company: Company }) {
+const LoadingState = () => (
+  <div className="flex flex-col items-center justify-center py-12">
+    <Loader className="h-8 w-8 animate-spin text-primary mb-4" />
+    <p className="text-sm text-muted-foreground">Cargando servicios...</p>
+  </div>
+);
+
+const ErrorState = ({ onRetry }: { onRetry?: () => void }) => (
+  <div className="flex flex-col items-center justify-center py-12">
+    <div className="w-16 h-16 mx-auto rounded-full bg-destructive/10 flex items-center justify-center mb-4">
+      <AlertCircle className="h-8 w-8 text-destructive" />
+    </div>
+    <h4 className="text-lg font-semibold text-foreground mb-2">
+      Error al cargar servicios
+    </h4>
+    <p className="text-sm text-muted-foreground mb-4 text-center max-w-sm">
+      Hubo un problema al obtener la información. Por favor, intenta nuevamente.
+    </p>
+    {onRetry && (
+      <Button variant="outline" onClick={onRetry} className="gap-2">
+        <RefreshCw className="h-4 w-4" />
+        Reintentar
+      </Button>
+    )}
+  </div>
+);
+
+const EmptyState = () => (
+  <div className="text-center py-12">
+    <div className="w-16 h-16 mx-auto rounded-full bg-muted/50 flex items-center justify-center mb-4">
+      <Blocks className="h-8 w-8 text-muted-foreground" />
+    </div>
+    <h4 className="text-lg font-semibold text-foreground mb-2">
+      No se encontraron servicios
+    </h4>
+    <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+      Intenta ajustar los filtros o crear un nuevo servicio para comenzar.
+    </p>
+  </div>
+);
+
+export function AgendaHeader() {
+  const nameId = useParams().id;
+  const { data, isLoading, isError, refetch } = useAgenda({
+    companyNameId: nameId as string,
+  });
+  const company = data?.company;
+
+  const handleRetry = () => {
+    refetch();
+  };
+
+  if (isLoading) return <LoadingState />;
+  if (isError) return <ErrorState onRetry={handleRetry} />;
+  if (!company) return <EmptyState />;
+
   return (
     <div className="relative mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
       {/* Hero Background with theme-aware gradient */}
