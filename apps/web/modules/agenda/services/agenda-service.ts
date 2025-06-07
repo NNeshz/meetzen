@@ -9,4 +9,12 @@ export const AgendaService = {
         })
         return response.data
     },
+    getCompanyServices: async (companyNameId: string) => {
+        const response = await apiClient.public.agenda({ companyNameId }).services.get({
+            fetch: {
+                credentials: "include",
+            },
+        })
+        return response.data
+    },
 }

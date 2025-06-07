@@ -17,6 +17,26 @@ export class AgendaService {
                 endTime: true,
                 pmamStart: true,
                 pmamEnd: true,
+            }
+        });
+
+        if (!company) {
+            throw new Error("Compañía no encontrada");
+        }
+
+        return {
+            success: true,
+            message: "Agenda obtenida exitosamente",
+            company,
+        };
+    }
+
+    async getCompanyServices(companyNameId: string) {
+        const company = await prisma.company.findFirst({
+            where: {
+                nameId: companyNameId
+            },
+            select: {
                 services: {
                     select: {
                         id: true,
@@ -40,7 +60,7 @@ export class AgendaService {
 
         return {
             success: true,
-            message: "Agenda obtenida exitosamente",
+            message: "Servicios obtenidos exitosamente",
             company,
         };
     }

@@ -9,3 +9,12 @@ export function useAgenda({ companyNameId }: { companyNameId: string }) {
     staleTime: 60 * 60 * 1000,
   });
 }
+
+export function useAgendaServices({ companyNameId }: { companyNameId: string }) {
+  return useQuery({
+    queryKey: ["agenda-services", companyNameId],
+    queryFn: () => AgendaService.getCompanyServices(companyNameId),
+    enabled: !!companyNameId,
+    staleTime: 60 * 60 * 1000,
+  });
+}

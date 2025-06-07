@@ -13,3 +13,8 @@ export const agendaRouter = new Elysia({
         companyNameId: t.String(),
     })
 })
+.get("/:companyNameId/services", ({ agendaService, params }) => agendaService.getCompanyServices(params.companyNameId), {
+    params: t.Object({
+        companyNameId: t.String(),
+    })
+})
