@@ -13,6 +13,13 @@ enum WeekDay {
     SUNDAY
 }
 
+enum AppointmentStatus {
+    CANCELLED
+    PENDING
+    COMPLETED
+    NOT_SHOWN
+}
+
 model Company {
     id String @id @default(uuid())
 
@@ -46,6 +53,7 @@ model Company {
     services          Services[]
     users             User[]
     serviceCategories ServiceCategory[]
+    appointments      Appointment[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -73,6 +81,7 @@ model Employees {
     company      Company                @relation(fields: [companyId], references: [id])
     companyId    String
     availability EmployeeAvailability[]
+    appointments Appointment[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -141,6 +150,7 @@ model Services {
     companyId         String
     serviceCategory   ServiceCategory? @relation(fields: [serviceCategoryId], references: [id])
     serviceCategoryId String?
+    appointments      Appointment[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -148,4 +158,36 @@ model Services {
     // Nombre único por empresa
     @@unique([name, companyId])
     @@map("services")
+}
+
+model Appointment {
+    id String @id @default(uuid())
+
+    // Información de la cita
+    day      DateTime
+    endTime  DateTime // opcional pero útil
+    duration Int // explícito para evitar join a service
+    status   AppointmentStatus @default(PENDING)
+
+    // Relaciones
+    serviceId  String
+    companyId  String
+    employeeId String
+    clientId   String
+
+    service  Services  @relation(fields: [serviceId], references: [id])
+    company  Company   @relation(fields: [companyId], references: [id])
+    employee Employees @relation(fields: [employeeId], references: [id])
+    client   User      @relation(fields: [clientId], references: [id])
+
+    // Borrado lógico
+    isDeleted Boolean   @default(false)
+    deletedAt DateTime?
+    deletedBy String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([employeeId, day])
+    @@map("appointment")
 }

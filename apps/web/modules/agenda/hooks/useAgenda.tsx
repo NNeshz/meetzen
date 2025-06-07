@@ -18,3 +18,12 @@ export function useAgendaServices({ companyNameId }: { companyNameId: string }) 
     staleTime: 60 * 60 * 1000,
   });
 }
+
+export function useAgendaAvailability({ companyNameId }: { companyNameId: string }) {
+  return useQuery({
+    queryKey: ["agenda-availability", companyNameId],
+    queryFn: () => AgendaService.getAvailableDays(companyNameId),
+    enabled: !!companyNameId,
+    staleTime: 60 * 60 * 1000,
+  });
+}
