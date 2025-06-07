@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 "use client";
 
 import { useAgenda } from "@/modules/agenda/hooks/useAgenda";
+=======
+import { WeekDay } from "@meetzen/database";
+>>>>>>> origin
 import {
   Avatar,
   AvatarFallback,
