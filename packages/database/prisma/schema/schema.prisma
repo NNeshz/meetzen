@@ -34,12 +34,13 @@ model User {
   banReason           String?
   banExpires          DateTime?
 
-  accounts    Account[]
-  sessions    Session[]
-  members     Member[]
-  invitations Invitation[]
+  accounts     Account[]
+  sessions     Session[]
+  members      Member[]
+  invitations  Invitation[]
+  appointments Appointment[]
 
-  company   Company? @relation(fields: [companyId], references: [id])
+  company Company? @relation(fields: [companyId], references: [id])
 
   createdAt DateTime
   updatedAt DateTime
