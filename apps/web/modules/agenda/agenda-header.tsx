@@ -32,6 +32,7 @@ import {
 } from "@meetzen/ui/src/components/drawer";
 import { useIsMobile } from "@meetzen/ui/src/hooks/use-mobile";
 import { useState } from "react";
+import { IconEyeQuestion } from "@tabler/icons-react";
 
 const formatAvailableDays = (days: string[]) => {
   const dayTranslations: { [key: string]: string } = {
@@ -66,44 +67,71 @@ const formatTime = (hour: string, period: string) => {
 };
 
 const LoadingState = () => (
-  <div className="flex flex-col items-center justify-center py-8">
-    <Loader className="h-6 w-6 animate-spin text-primary mb-3" />
-    <p className="text-sm text-muted-foreground">Cargando servicios...</p>
-  </div>
+  <Card
+    className="bg-gradient-to-t from-primary/5 to-card dark:bg-card shadow-xs flex flex-col items-center gap-2 justify-center p-4"
+    data-slot="card"
+  >
+    <div className="flex flex-col items-center space-y-2 gap-2">
+      <Loader className="h-6 w-6 animate-spin text-primary mb-3" />
+      <div className="flex flex-col items-center">
+        <h3 className="text-lg font-bold text-foreground truncate">
+          Cargando...
+        </h3>
+        <p className="text-sm text-muted-foreground">
+          Cargando la información de la empresa...
+        </p>
+      </div>
+    </div>
+  </Card>
 );
 
 const ErrorState = ({ onRetry }: { onRetry?: () => void }) => (
-  <div className="flex flex-col items-center justify-center py-8">
-    <div className="w-12 h-12 mx-auto rounded-full bg-destructive/10 flex items-center justify-center mb-3">
-      <AlertCircle className="h-6 w-6 text-destructive" />
+  <Card
+    className="bg-gradient-to-t from-primary/5 to-card dark:bg-card shadow-xs flex flex-col items-center gap-2 justify-center p-4"
+    data-slot="card"
+  >
+    <div className="flex flex-col items-center space-y-2 gap-2">
+      <AlertCircle className="h-6 w-6 text-destructive mb-3" />
+      <div className="flex flex-col items-center">
+        <h3 className="text-lg font-bold text-destructive truncate">
+          Error al cargar la información de la empresa
+        </h3>
+        <p className="text-sm text-muted-foreground">
+          Intenta nuevamente en unos minutos.
+        </p>
+        {onRetry && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onRetry}
+            className="gap-2"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Reintentar
+          </Button>
+        )}
+      </div>
     </div>
-    <h4 className="text-base font-semibold text-foreground mb-2">
-      Error al cargar servicios
-    </h4>
-    <p className="text-sm text-muted-foreground mb-4 text-center max-w-sm">
-      Hubo un problema al obtener la información. Por favor, intenta nuevamente.
-    </p>
-    {onRetry && (
-      <Button variant="outline" size="sm" onClick={onRetry} className="gap-2">
-        <RefreshCw className="h-4 w-4" />
-        Reintentar
-      </Button>
-    )}
-  </div>
+  </Card>
 );
 
 const EmptyState = () => (
-  <div className="text-center py-8">
-    <div className="w-12 h-12 mx-auto rounded-full bg-muted/50 flex items-center justify-center mb-3">
-      <Blocks className="h-6 w-6 text-muted-foreground" />
+  <Card
+    className="bg-gradient-to-t from-primary/5 to-card dark:bg-card shadow-xs flex flex-col items-center gap-2 justify-center p-4"
+    data-slot="card"
+  >
+    <div className="flex flex-col items-center space-y-2 gap-2">
+      <IconEyeQuestion className="h-6 w-6 text-muted-foreground mb-3" />
+      <div className="flex flex-col items-center">
+        <h3 className="text-lg font-bold text-muted-foreground truncate">
+          Esta empresa no existe
+        </h3>
+        <p className="text-sm text-muted-foreground">
+          ¿Seguro que el link que usaste es correcto?
+        </p>
+      </div>
     </div>
-    <h4 className="text-base font-semibold text-foreground mb-2">
-      No se encontraron servicios
-    </h4>
-    <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-      Intenta ajustar los filtros o crear un nuevo servicio para comenzar.
-    </p>
-  </div>
+  </Card>
 );
 
 export function AgendaHeader() {
@@ -148,9 +176,14 @@ export function AgendaHeader() {
       {!isMobile ? (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
-            <Button variant="default" size="sm" className="flex items-center gap-2">
+            <Button
+              variant="default"
+              size="sm"
+              className="flex items-center gap-2"
+            >
               <InfoIcon className="h-4 w-4" />
-              Ver Información</Button>
+              Ver Información
+            </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
@@ -165,9 +198,14 @@ export function AgendaHeader() {
       ) : (
         <Drawer open={isOpen} onOpenChange={setIsOpen}>
           <DrawerTrigger asChild>
-            <Button variant="default" size="sm" className="flex items-center gap-2">
+            <Button
+              variant="default"
+              size="sm"
+              className="flex items-center gap-2"
+            >
               <InfoIcon className="h-4 w-4" />
-              Ver Información</Button>
+              Ver Información
+            </Button>
           </DrawerTrigger>
           <DrawerContent>
             <DrawerHeader className="text-left">
