@@ -16,5 +16,11 @@ export const GlobalStepper = defineStepper(
     title: "¿Con quien quieres la cita?",
     description:
       "Selecciona a la persona que quieres que te atienda, ¡lo hará con gusto!",
+  },
+  {
+    id: "fourth",
+    title: "Solo dinos a que hora",
+    description:
+      "Selecciona la hora que quieres que te atienda, ¡lo hará con gusto!",
   }
 );

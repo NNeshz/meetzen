@@ -18,15 +18,11 @@ export const agendaRouter = new Elysia({
         companyNameId: t.String(),
     })
 })
-.get("/:companyNameId/availability", ({ agendaService, params }) => agendaService.getCompanyAvailability(params.companyNameId), {
+.post("/:companyNameId/availability", ({ agendaService, params, body }) => agendaService.getCompanyAvailability(params.companyNameId, body.serviceId), {
     params: t.Object({
         companyNameId: t.String(),
-    })
-})
-.get("/schedules", ({ agendaService, body }) => agendaService.getCompanySchedules(body), {
+    }),
     body: t.Object({
-        companyNameId: t.String(),
         serviceId: t.String(),
-        date: t.String(),
     })
 })

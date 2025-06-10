@@ -6,16 +6,14 @@ import { Temporal } from "temporal-polyfill";
 import { Card, CardHeader, CardContent } from "@meetzen/ui/src/components/card";
 import { GlobalStepper } from "@/modules/agenda/config/stepper.config";
 import { Badge } from "@meetzen/ui/src/components/badge";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@meetzen/ui/src/components/accordion";
+import { Button } from "@meetzen/ui/src/components/button";
+import { ArrowLeft } from "lucide-react";
+import { useAgendaStore } from "@/modules/agenda/state/useAgendaStore";
 
 export function AgendaDay() {
   const methods = GlobalStepper.useStepper();
   const nameId = useParams().id;
+  const { selectedDay, setSelectedDay } = useAgendaStore();
 
   const { data, isLoading, isError } = useAgendaAvailability({
     companyNameId: nameId as string,
@@ -40,15 +38,20 @@ export function AgendaDay() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h2 className="text-2xl font-bold">{methods.current.title}</h2>
-        <p className="text-sm text-muted-foreground">
-          {methods.current.description}
-        </p>
+      <div className="flex items-center gap-2">
+        <Button variant={"outline"} size={"icon"} onClick={() => methods.prev()}>
+          <ArrowLeft />
+        </Button>
+        <div className="flex flex-col">
+          <h2 className="text-2xl font-bold">{methods.current.title}</h2>
+          <p className="text-sm text-muted-foreground">
+            {methods.current.description}
+          </p>
+        </div>
       </div>
       <div className="w-full h-full flex flex-col gap-4">
         {availableDays.map((day) => (
-          <Card key={day.date} className="w-full">
+          <Card key={day.date} className="w-full cursor-pointer" onClick={() => {setSelectedDay(new Date(day.date)); methods.next()}}>
             <CardHeader className="flex justify-between items-center">
               <p>
                 {formatDate(day.date).weekDayName}{" "}
