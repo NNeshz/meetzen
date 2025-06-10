@@ -10,27 +10,10 @@ import { AgendaHorary } from "@/modules/agenda/agenda-horary";
 export default function Page() {
   return (
     <div className="h-screen p-4">
-      <div className="h-full">
-        <GlobalStepper.Scoped>
-          <InnerStepperPage />
-        </GlobalStepper.Scoped>
+      <div className="h-full max-w-5xl mx-auto space-y-4">
+        <AgendaHeader />
+        <AgendaServices />
       </div>
-    </div>
-  );
-}
-
-function InnerStepperPage() {
-  const methods = GlobalStepper.useStepper();
-
-  return (
-    <div className="max-w-5xl mx-auto space-y-4">
-      <AgendaHeader />
-      {methods.switch({
-        first: () => <AgendaServices />,
-        second: () => <AgendaDay />,
-        third: () => <AgendaEmployee />,
-        fourth: () => <AgendaHorary />,
-      })}
     </div>
   );
 }

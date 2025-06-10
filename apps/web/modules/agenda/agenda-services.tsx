@@ -24,6 +24,7 @@ import {
 } from "@meetzen/ui/src/components/select";
 import { GlobalStepper } from "@/modules/agenda/config/stepper.config";
 import { useAgendaStore } from "./state/useAgendaStore";
+import { AgendaResponsiveForm } from "./agenda-responsive-form";
 
 const LoadingState = () => (
   <div className="flex flex-col items-center justify-center py-12">
@@ -115,14 +116,18 @@ export function AgendaServices() {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {services.map((service) => (
-          <Card
+          <AgendaResponsiveForm
+            key={service.id}
+            serviceId={service.id}
+            companyNameId={nameId as string}
+          >
+            <Card
             key={service.id}
             className="bg-gradient-to-t from-primary/5 to-card dark:bg-card shadow-xs cursor-pointer"
             data-slot="card"
             onClick={() => {
               setSelectedServiceName(service.name);
               setSelectedServiceId(service.id);
-              methods.next();
             }}
           >
             <CardContent className="space-y-2">
@@ -140,6 +145,7 @@ export function AgendaServices() {
                 <Badge>{service.serviceCategory?.name || "Sin categoría"}</Badge>
             </CardContent>
           </Card>
+          </AgendaResponsiveForm>
         ))}
       </div>
     </div>

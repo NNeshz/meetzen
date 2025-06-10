@@ -30,7 +30,7 @@ export class ServiceService {
           duration: body.duration,
           price: body.price,
           companyId: user.companyId,
-          serviceCategoryId: body.categoryId ,
+          serviceCategoryId: body.categoryId || null,
         },
       });
       return {

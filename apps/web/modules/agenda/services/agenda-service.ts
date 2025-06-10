@@ -18,8 +18,8 @@ export const AgendaService = {
         return response.data
     },
 
-    getAvailableDays: async (companyNameId: string) => {
-        const response = await apiClient.public.agenda({companyNameId}).availability.get({
+    getCompanyAvailability: async (companyNameId: string, serviceId: string) => {   
+        const response = await apiClient.public.agenda({ companyNameId }).availability.post({ serviceId }, {
             fetch: {
                 credentials: "include",
             },

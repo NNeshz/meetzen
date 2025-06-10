@@ -19,11 +19,11 @@ export function useAgendaServices({ companyNameId }: { companyNameId: string }) 
   });
 }
 
-export function useAgendaAvailability({ companyNameId }: { companyNameId: string }) {
+export function useCompanyAvailability({ companyNameId, serviceId }: { companyNameId: string, serviceId: string }) {
   return useQuery({
-    queryKey: ["agenda-availability", companyNameId],
-    queryFn: () => AgendaService.getAvailableDays(companyNameId),
-    enabled: !!companyNameId,
+    queryKey: ["company-availability", companyNameId],
+    queryFn: () => AgendaService.getCompanyAvailability(companyNameId, serviceId),
+    enabled: !!companyNameId && !!serviceId,
     staleTime: 60 * 60 * 1000,
   });
 }
