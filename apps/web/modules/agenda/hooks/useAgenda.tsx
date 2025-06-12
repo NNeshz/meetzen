@@ -21,7 +21,7 @@ export function useAgendaServices({ companyNameId }: { companyNameId: string }) 
 
 export function useCompanyAvailability({ companyNameId, serviceId }: { companyNameId: string, serviceId: string }) {
   return useQuery({
-    queryKey: ["company-availability", companyNameId],
+    queryKey: ["company-availability", companyNameId, serviceId],
     queryFn: () => AgendaService.getCompanyAvailability(companyNameId, serviceId),
     enabled: !!companyNameId && !!serviceId,
     staleTime: 60 * 60 * 1000,
