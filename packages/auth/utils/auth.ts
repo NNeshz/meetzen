@@ -1,7 +1,7 @@
 import { PrismaClient } from "@meetzen/database";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { openAPI, admin } from "better-auth/plugins";
+import { openAPI, admin, phoneNumber } from "better-auth/plugins";
 import { user, company } from "@meetzen/auth/utils/permissions";
 
 const prisma = new PrismaClient();
@@ -40,7 +40,7 @@ export const auth = betterAuth({
         "email",
         "profile",
         "openid",
-        "https://www.googleapis.com/auth/calendar.events", // <--- ¡MUY IMPORTANTE!
+        "https://www.googleapis.com/auth/calendar.events",
       ],
     },
   },
@@ -58,5 +58,10 @@ export const auth = betterAuth({
       },
       defaultRole: "user",
     }),
+    phoneNumber({
+      sendOTP: ({ phoneNumber, code}, request) => {
+        // TODO: Implementar envio de OTP
+      },
+    })
   ],
 });
